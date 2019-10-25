@@ -407,8 +407,8 @@ Para ello, comenzamos importando el módulo <code>pytraj</code>.</p>
 Observa que la función <code>pyt.load()</code> recibe los parámetros <code>filename</code> y <code>top</code> correspondientes al archivo de coordenadas y de topología, respectivamente.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Cargamos la restructura inicial, es decir, la estructura lineal del péptido</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">lineal_strc <span class="op">=</span> pyt.load(</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">    filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/1-topologia/tc5b.pdb&#39;</span>,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">    top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/1-topologia/tc5b.psf&#39;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    filename <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/1-topologia/tc5b.pdb&#39;</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    top <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/1-topologia/tc5b.psf&#39;</span>)</a></code></pre></div>
 <p>Ahora, si llamamos a la variable <em><code>cristal_strc</code></em>, veremos que ésta corresponde a un objeto <em><code>pytraj.Trajectory</code></em> con los siguientes atributos:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1">lineal_strc</a></code></pre></div>
 <pre><code>## pytraj.Trajectory, 1 frames: 
@@ -429,7 +429,7 @@ Observa que la función <code>pyt.load()</code> recibe los parámetros <code>fil
 <script>
     document.addEventListener("DOMContentLoaded", function () {
        var stage = new NGL.Stage( "viewport");
-       stage.loadFile("./docs/1L2Y/1-topologia/tc5b.pdb").then(function (o) {
+       stage.loadFile("dm_sources_1L2Y/1-topologia/tc5b.pdb").then(function (o) {
        o.addRepresentation("cartoon");
        o.autoView();
       });
@@ -443,7 +443,7 @@ Observa que la función <code>pyt.load()</code> recibe los parámetros <code>fil
 <div id="carga-de-la-trayectoria" class="section level2">
 <h2><span class="header-section-number">1.2</span> Carga de la trayectoria</h2>
 <p>Ahora, vamos a proceder a cargar en memoria los archivos de trayectoria <code>dcd</code> de todas las fases de la dinámica. Para ello, es necesario primero definir el archivo de topología que utilizaremos.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">f_topology <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span></a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">f_topology <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">top_psf <span class="op">=</span> pyt.load_topology(f_topology)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">top_psf</a></code></pre></div>
 <pre><code>## &lt;Topology: 18869 atoms, 6209 residues, 6190 mols, non-PBC&gt;</code></pre>
@@ -458,15 +458,15 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos “red
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># 5_traj_analysis</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co"># Un ejemplo de cómo realizar dicha extracción es el siguiente:</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">_min <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/1_min/tc5b_wb_min.dcd&#39;</span>, </a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">                top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span>)</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">_min <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/4-run_dm_2/1_min/tc5b_wb_min.dcd&#39;</span>, </a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">                top <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span>)</a>
 <a class="sourceLine" id="cb10-8" data-line-number="8"><span class="bu">print</span>(_min)</a>
 <a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co"># Ahora guardamos un nuevo archivo de trayectoria:</span></a></code></pre></div>
 <pre><code>## pytraj.Trajectory, 1 frames: 
 ## Size: 0.000422 (GB)
 ## &lt;Topology: 18869 atoms, 6209 residues, 6190 mols, non-PBC&gt;
 ## </code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" data-line-number="1">pyt.write_traj(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/tc5b_PROT_MIN.dcd&#39;</span>, </a>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" data-line-number="1">pyt.write_traj(filename <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_MIN.dcd&#39;</span>, </a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">               traj <span class="op">=</span> _min[<span class="st">&#39;:1-20&#39;</span>], </a>
 <a class="sourceLine" id="cb12-3" data-line-number="3">               overwrite<span class="op">=</span><span class="va">True</span>)</a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="bu">print</span>(<span class="ss">F&#39;Archivo guardado:</span><span class="ch">\n</span><span class="sc">{</span>_min[<span class="st">&quot;:1-20&quot;</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</a></code></pre></div>
@@ -479,9 +479,9 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos “red
 <h3><span class="header-section-number">1.2.1</span> Archivos <em>.dcd</em></h3>
 <p>Ahora ubicamos el directorio y nombre de cada uno de los archivos dcd. Esto incluye también al archivo .pdb con la estructura inicial.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># PDB inicial</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">f_inicial <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/2-solvatar_wt/tc5b_wb.pdb&#39;</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">f_inicial <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/2-solvatar_wt/tc5b_wb.pdb&#39;</span></a>
 <a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co"># Archivos de dinámica</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">dir_traj <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis&#39;</span> <span class="co"># Directorio de los archivos</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">dir_traj <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis&#39;</span> <span class="co"># Directorio de los archivos</span></a>
 <a class="sourceLine" id="cb14-5" data-line-number="5">f_min <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_MIN.dcd&#39;</span></a>
 <a class="sourceLine" id="cb14-6" data-line-number="6">f_heat <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_SA.dcd&#39;</span></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">f_eq <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_EQ.dcd&#39;</span></a>
@@ -607,8 +607,8 @@ Como primer ejemplo usaremos la estructura lineal usando el parámetro ref.</p>
 Ahora bien, para un análisis más interesante usaremos como referencia la estructura por NMR de la proteína, con el objetivo de saber si, a lo largo de la simulación, las estructura de la proteína se aproxima a la estructura experimental.<br />
 Para ello cargamos la estructura NMR de la proteína.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Cargamos la estructura NMR</span></a>
-<a class="sourceLine" id="cb43-2" data-line-number="2">nmr_strc <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/1l2y_Hs.pdb&#39;</span>,</a>
-<a class="sourceLine" id="cb43-3" data-line-number="3">                  top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/1l2y_Hs.psf&#39;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb43-2" data-line-number="2">nmr_strc <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.pdb&#39;</span>,</a>
+<a class="sourceLine" id="cb43-3" data-line-number="3">                  top <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.psf&#39;</span>)</a></code></pre></div>
 <p>Calculamos el RMSD de la trayectoria usando como referencia a nmr_strc. Seguido de ello, generamos la gráfica.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb44-1" data-line-number="1">rmsd_full_REF_nmr <span class="op">=</span> pyt.rmsd( traj <span class="op">=</span> full_traj, </a>
 <a class="sourceLine" id="cb44-2" data-line-number="2">                                mask <span class="op">=</span> <span class="st">&#39;:4-17,@CA&#39;</span>, </a>

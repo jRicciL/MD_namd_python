@@ -1,6 +1,6 @@
 dm_sources_1L2Y/4-run_dm_2/*/FFTW_NAMD*
 dm_sources_1L2Y/4-run_dm_2/*/tc5b*
-docs/1L2Y
+docs/dm_sources_1L2Y/
 .ipynb_checkpoints/
 .Rproj.user
 .Rhistory

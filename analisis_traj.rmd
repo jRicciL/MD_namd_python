@@ -31,8 +31,8 @@ Observa que la función `pyt.load()` recibe los parámetros `filename` y `top` c
 ```{python}
 # Cargamos la restructura inicial, es decir, la estructura lineal del péptido
 lineal_strc = pyt.load(
-    filename = './docs/1L2Y/1-topologia/tc5b.pdb',
-    top = './docs/1L2Y/1-topologia/tc5b.psf')
+    filename = 'dm_sources_1L2Y/1-topologia/tc5b.pdb',
+    top = 'dm_sources_1L2Y/1-topologia/tc5b.psf')
 ```
 
 Ahora, si llamamos a la variable *`cristal_strc`*, veremos que ésta corresponde a un objeto *`pytraj.Trajectory`* con los siguientes atributos:
@@ -58,7 +58,7 @@ lineal_strc_view
   <script>
     document.addEventListener("DOMContentLoaded", function () {
        var stage = new NGL.Stage( "viewport");
-       stage.loadFile("./docs/1L2Y/1-topologia/tc5b.pdb").then(function (o) {
+       stage.loadFile("dm_sources_1L2Y/1-topologia/tc5b.pdb").then(function (o) {
        o.addRepresentation("cartoon");
        o.autoView();
       });
@@ -71,7 +71,7 @@ lineal_strc_view
 Ahora, vamos a proceder a cargar en memoria los archivos de trayectoria `dcd` de todas las fases de la dinámica. Para ello, es necesario primero definir el archivo de topología que utilizaremos.
 
 ```{python}
-f_topology = './docs/1L2Y/4-run_dm_2/tc5b_wb.psf'
+f_topology = 'dm_sources_1L2Y/4-run_dm_2/tc5b_wb.psf'
 top_psf = pyt.load_topology(f_topology)
 top_psf
 ```
@@ -92,11 +92,11 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos "reduc
 # 5_traj_analysis
 
 # Un ejemplo de cómo realizar dicha extracción es el siguiente:
-_min = pyt.load(filename = './docs/1L2Y/4-run_dm_2/1_min/tc5b_wb_min.dcd', 
-                top = './docs/1L2Y/4-run_dm_2/tc5b_wb.psf')
+_min = pyt.load(filename = 'dm_sources_1L2Y/4-run_dm_2/1_min/tc5b_wb_min.dcd', 
+                top = 'dm_sources_1L2Y/4-run_dm_2/tc5b_wb.psf')
 print(_min)
 # Ahora guardamos un nuevo archivo de trayectoria:
-pyt.write_traj(filename = './docs/1L2Y/5-traj_analysis/tc5b_PROT_MIN.dcd', 
+pyt.write_traj(filename = 'dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_MIN.dcd', 
                traj = _min[':1-20'], 
                overwrite=True)
 print(F'Archivo guardado:\n{_min[":1-20"]}')
@@ -108,9 +108,9 @@ Ahora ubicamos el directorio y nombre de cada uno de los archivos dcd. Esto incl
 
 ```{python}
 # PDB inicial
-f_inicial = './docs/1L2Y/2-solvatar_wt/tc5b_wb.pdb'
+f_inicial = 'dm_sources_1L2Y/2-solvatar_wt/tc5b_wb.pdb'
 # Archivos de dinámica
-dir_traj = './docs/1L2Y/5-traj_analysis' # Directorio de los archivos
+dir_traj = 'dm_sources_1L2Y/5-traj_analysis' # Directorio de los archivos
 f_min = F'{dir_traj}/tc5b_PROT_MIN.dcd'
 f_heat = F'{dir_traj}/tc5b_PROT_SA.dcd'
 f_eq = F'{dir_traj}/tc5b_PROT_EQ.dcd'
@@ -262,8 +262,8 @@ Para ello cargamos la estructura NMR de la proteína.
 
 ```{python}
 # Cargamos la estructura NMR
-nmr_strc = pyt.load(filename = './docs/1L2Y/5-traj_analysis/1l2y_Hs.pdb',
-                  top = './docs/1L2Y/5-traj_analysis/1l2y_Hs.psf')
+nmr_strc = pyt.load(filename = 'dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.pdb',
+                  top = 'dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.psf')
 ```
 
 Calculamos el RMSD de la trayectoria usando como referencia a nmr_strc. Seguido de ello, generamos la gráfica.
