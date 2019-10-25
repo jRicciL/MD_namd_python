@@ -13,7 +13,7 @@ navbar:
   - text: "Inicio"
     href: index.html
   - text: "Introducción"
-    href: intro_R_p1.html
+    href: intro_DM.html
   - text: "Dinámica Molecular"
     menu:
       - text: "Preparación del Sistema"
