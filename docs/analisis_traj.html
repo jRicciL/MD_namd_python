@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Joel Ricci López" />
+
+
+<title>Análisis de Trayectorias</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Curso de DM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Inicio</a>
+</li>
+<li>
+  <a href="intro_R_p1.html">Introducción</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Dinámica Molecular
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="prep_sistema.html">Preparación del Sistema</a>
+    </li>
+    <li>
+      <a href="parametros_dm.html">Archivos de Configuración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Análisis de Trayectorias
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analisis_traj.html">RMSD y RMSF</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Análisis de Trayectorias</h1>
+<h4 class="author">Joel Ricci López</h4>
+<h4 class="date">16/10/2019</h4>
+
+</div>
+
+
+<div id="análisis-de-trayectorias-con-pytraj" class="section level1">
+<h1><span class="header-section-number">1</span> Análisis de trayectorias con <em>pytraj</em></h1>
+<p>Como primer paso vamos a cargar los datos de la trayectoria de la DM, considerando cada una de las fases realizadas.<br />
+Para ello, comenzamos importando el módulo <code>pytraj</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">import</span> pytraj <span class="im">as</span> pyt</a></code></pre></div>
+<p>A continuación, cargamos la estructura inicial de la porteína, que corresponde a la conformación lineal a partir de la cual realizamos la minimización y la dinámica molecular.<br />
+Observa que la función <code>pyt.load()</code> recibe los parámetros <code>filename</code> y <code>top</code> correspondientes al archivo de coordenadas y de topología, respectivamente.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Cargamos la restructura inicial, es decir, la estructura lineal del péptido</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">lineal_strc <span class="op">=</span> pyt.load(</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/1-topologia/tc5b.pdb&#39;</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/1-topologia/tc5b.psf&#39;</span>)</a></code></pre></div>
+<p>Ahora, si llamamos a la variable <em><code>cristal_strc</code></em>, veremos que ésta corresponde a un objeto <em><code>pytraj.Trajectory</code></em> con los siguientes atributos:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1">lineal_strc</a></code></pre></div>
+<pre><code>## pytraj.Trajectory, 1 frames: 
+## Size: 0.000007 (GB)
+## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
+## </code></pre>
+<div id="visualización-de-la-esturctura" class="section level2">
+<h2><span class="header-section-number">1.1</span> Visualización de la esturctura</h2>
+<p>Recordemos que podemos utilizar la librería <em>nglview</em> para visualizar la estructura de la proteína:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Importamos nglview</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="im">import</span> nglview <span class="im">as</span> nv</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="im">import</span> warnings</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">lineal_strc_view <span class="op">=</span> nv.show_pytraj(lineal_strc)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">lineal_strc_view.background <span class="op">=</span> <span class="st">&#39;black&#39;</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">lineal_strc_view</a></code></pre></div>
+<div class="container text-center">
+<script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+       var stage = new NGL.Stage( "viewport");
+       stage.loadFile("./docs/1L2Y/1-topologia/tc5b.pdb").then(function (o) {
+       o.addRepresentation("cartoon");
+       o.autoView();
+      });
+    });
+  </script>
+<div id="viewport" class="container text-center" style="width:400px; height:300px;">
+
+</div>
+</div>
+</div>
+<div id="carga-de-la-trayectoria" class="section level2">
+<h2><span class="header-section-number">1.2</span> Carga de la trayectoria</h2>
+<p>Ahora, vamos a proceder a cargar en memoria los archivos de trayectoria <code>dcd</code> de todas las fases de la dinámica. Para ello, es necesario primero definir el archivo de topología que utilizaremos.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">f_topology <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">top_psf <span class="op">=</span> pyt.load_topology(f_topology)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">top_psf</a></code></pre></div>
+<pre><code>## &lt;Topology: 18869 atoms, 6209 residues, 6190 mols, non-PBC&gt;</code></pre>
+<p>Este archivo de topoligía incluye a todas las molécuals del sistema, sin embargo, por ahora sólo nos interesa analizar la trayectoria de la proteína, por lo que redefiniremos el archivo de topología para que sólo incluya los átomos de la misma (los primeros 20 residuos del sistema).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" data-line-number="1">top_prot_psf <span class="op">=</span> top_psf[<span class="st">&#39;:1-20&#39;</span>]</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">top_prot_psf </a></code></pre></div>
+<pre><code>## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;</code></pre>
+<p>Ahora procederemos a cargar los archivos dcd. Sin embargo, para este análisis cargaremos archivos dcd a los cuales se les ha removido el solvente, con el objetivo de reducir el tamaño de los archivos y poder distribuirlos en línea.<br />
+A continuación mostramos el ejemplo de cómo se generaron estos archivos “reducidos” a partir de los dcd originales.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Para optimizar el análisis, previamente se han extraido de las trayectorias</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co"># únicamente los átomos correspondientes a la proteína y guardado en la carpeta</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># 5_traj_analysis</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co"># Un ejemplo de cómo realizar dicha extracción es el siguiente:</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">_min <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/1_min/tc5b_wb_min.dcd&#39;</span>, </a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">                top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span>)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="bu">print</span>(_min)</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co"># Ahora guardamos un nuevo archivo de trayectoria:</span></a></code></pre></div>
+<pre><code>## pytraj.Trajectory, 1 frames: 
+## Size: 0.000422 (GB)
+## &lt;Topology: 18869 atoms, 6209 residues, 6190 mols, non-PBC&gt;
+## </code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" data-line-number="1">pyt.write_traj(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/tc5b_PROT_MIN.dcd&#39;</span>, </a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">               traj <span class="op">=</span> _min[<span class="st">&#39;:1-20&#39;</span>], </a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">               overwrite<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="bu">print</span>(<span class="ss">F&#39;Archivo guardado:</span><span class="ch">\n</span><span class="sc">{</span>_min[<span class="st">&quot;:1-20&quot;</span>]<span class="sc">}</span><span class="ss">&#39;</span>)</a></code></pre></div>
+<pre><code>## Archivo guardado:
+## pytraj.Trajectory, 1 frames: 
+## Size: 0.000007 (GB)
+## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
+## </code></pre>
+<div id="archivos-.dcd" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Archivos <em>.dcd</em></h3>
+<p>Ahora ubicamos el directorio y nombre de cada uno de los archivos dcd. Esto incluye también al archivo .pdb con la estructura inicial.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># PDB inicial</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">f_inicial <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/2-solvatar_wt/tc5b_wb.pdb&#39;</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co"># Archivos de dinámica</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">dir_traj <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis&#39;</span> <span class="co"># Directorio de los archivos</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">f_min <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_MIN.dcd&#39;</span></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">f_heat <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_SA.dcd&#39;</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">f_eq <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_EQ.dcd&#39;</span></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">f_prod <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_PROD.dcd&#39;</span></a></code></pre></div>
+<p>Ahora cargamos cada uno de los archivos utilizando el objeto de topología <code>top_psf</code>. Como ejemplo puedes ver que también es posible usar el parámetro mask para determinar qué átomos deberán ser considerados al cargarse en memoria. Sin embargo, podemos omitirlo en las fases de minimización en adelante, ya que esta selección de los átomso de laproteína ya la hicimos al cargar el archivo de topología.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">#Estructura inicial</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">init_struc <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_inicial, </a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">                      top <span class="op">=</span> top_psf, mask <span class="op">=</span> <span class="st">&#39;:1-20&#39;</span>)</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="bu">print</span>( <span class="ss">F&#39;Estructura inicial: </span><span class="sc">{</span>init_struc<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co"># Minimización</span></a></code></pre></div>
+<pre><code>## Estructura inicial: 1 frames</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb17-1" data-line-number="1">min_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_min, top <span class="op">=</span> top_prot_psf)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Minimización: </span><span class="sc">{</span>min_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co"># Calentamiento</span></a></code></pre></div>
+<pre><code>## Minimización: 1 frames</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb19-1" data-line-number="1">heat_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_heat, top <span class="op">=</span> top_prot_psf)</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Calentamiento: </span><span class="sc">{</span>heat_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co"># Equilibrado</span></a></code></pre></div>
+<pre><code>## Calentamiento: 96 frames</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb21-1" data-line-number="1">eq_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_eq, top <span class="op">=</span> top_prot_psf)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Equilibrado: </span><span class="sc">{</span>eq_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a></code></pre></div>
+<pre><code>## Equilibrado: 250 frames</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Producción</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">prod_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_prod, top <span class="op">=</span> top_prot_psf)</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="bu">print</span>(<span class="ss">F&#39;Producción: </span><span class="sc">{</span>prod_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a></code></pre></div>
+<pre><code>## Producción: 5000 frames</code></pre>
+<p>Además de cargar los archivos, hemos usado el atributo n_frames que nos dice cuántos frames posee cada tryectoria. En python es posible utilizar las funciones <code>type()</code> y <code>dir()</code> para conocer qué métodos y atributos posee un objeto según la clase a que pertenece.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="bu">print</span>(<span class="bu">type</span>( prod_traj ))</a></code></pre></div>
+<pre><code>## &lt;class &#39;pytraj.trajectory.trajectory.Trajectory&#39;&gt;</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="bu">print</span>(<span class="bu">dir</span>( prod_traj ))</a></code></pre></div>
+<pre><code>## [&#39;__add__&#39;, &#39;__call__&#39;, &#39;__class__&#39;, &#39;__del__&#39;, &#39;__delattr__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__getitem__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__iter__&#39;, &#39;__le__&#39;, &#39;__len__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__setitem__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__weakref__&#39;, &#39;_allocate&#39;, &#39;_append_unitcells&#39;, &#39;_boxes&#39;, &#39;_estimated_GB&#39;, &#39;_frame_holder&#39;, &#39;_handle_setting_box_force_velocity&#39;, &#39;_iterframe_indices&#39;, &#39;_life_holder&#39;, &#39;_top&#39;, &#39;_xyz&#39;, &#39;align_principal_axis&#39;, &#39;append&#39;, &#39;append_xyz&#39;, &#39;autoimage&#39;, &#39;center&#39;, &#39;copy&#39;, &#39;forces&#39;, &#39;from_iterable&#39;, &#39;iterframe&#39;, &#39;load&#39;, &#39;n_atoms&#39;, &#39;n_frames&#39;, &#39;rmsfit&#39;, &#39;rotate&#39;, &#39;save&#39;, &#39;scale&#39;, &#39;shape&#39;, &#39;strip&#39;, &#39;superpose&#39;, &#39;time&#39;, &#39;top&#39;, &#39;topology&#39;, &#39;transform&#39;, &#39;translate&#39;, &#39;unitcells&#39;, &#39;velocities&#39;, &#39;view&#39;, &#39;visualize&#39;, &#39;xyz&#39;]</code></pre>
+</div>
+</div>
+<div id="concatenación-de-las-trayectorias" class="section level2">
+<h2><span class="header-section-number">1.3</span> Concatenación de las trayectorias</h2>
+<p>Ahora, con el objetivo de ver la evolución conformacional de la proteína a lo largo de todas las fases, vamos a unir todas las trayectorias en una sola. Esto también nos permitirá guardar una única trayectoria para posteriores análisis.<br />
+Primero generamos una lista con los objetos de trayectoria:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># Combinamos todas las etapas para visualizar una única trayectoria</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2">trajs_list <span class="op">=</span> [min_traj, heat_traj, eq_traj, prod_traj]</a></code></pre></div>
+<p>El siguiente paso es usar la lista traj_list para iterar sobre sus elementos.<br />
+Para ello vamos utilizar una expresión conosida como list comprehension. Por ahora las usaremos para uardar en una nueva lista el número de frames de cada fase.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># Número total de frames</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">n_frames_list <span class="op">=</span> [ traj.n_frames <span class="cf">for</span> traj <span class="kw">in</span> trajs_list ] <span class="co"># Observa la sintaxis</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3">n_frames_list</a></code></pre></div>
+<pre><code>## [1, 96, 250, 5000]</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb32-1" data-line-number="1">n_full_frames <span class="op">=</span> <span class="bu">sum</span>(n_frames_list)</a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Número total de frames: </span><span class="sc">{</span>n_full_frames<span class="sc">}</span><span class="ss">&#39;</span>)</a></code></pre></div>
+<pre><code>## Número total de frames: 5347</code></pre>
+<p>Ahora crearemos un nuevo objeto <code>Trajectory</code> inicializándolo como una copia del objeto <code>init_struct</code>, al que iremos añadiendo las coordenadas de los objetos de la lista <code>trajs_list</code> usando el método <code>append_xyz</code>:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># Inicializamos la trayectoria con una copia de la estructura inicial, </span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="co"># que es un objeto de la clase Trajectory de pytraj</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">full_traj <span class="op">=</span> init_struc.copy()</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="co"># Iteramos sobre la lista de trayecorias, añadiendo las coordenadas</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="co"># al objeto full_traj</span></a>
+<a class="sourceLine" id="cb34-7" data-line-number="7"><span class="cf">for</span> traj <span class="kw">in</span> trajs_list:</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">    full_traj.append_xyz(traj.xyz)</a>
+<a class="sourceLine" id="cb34-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb34-10" data-line-number="10">full_traj</a></code></pre></div>
+<pre><code>## pytraj.Trajectory, 5348 frames: 
+## Size: 0.036339 (GB)
+## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
+## </code></pre>
+<div id="guardando-el-archivo-de-tryectoria" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Guardando el archivo de tryectoria</h3>
+<p>Como vimos en el jemplo de la tayectoria de la minimización, podemos usar la función <code>write_traj()</code>. Observa qué parámetros se requieren para guardar el nuevo archivo.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Podemos guardar el archivo para trabajar con él en un posterior análisis</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">name_file_full_traj <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_FULL_TRAJ.dcd&#39;</span></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">pyt.write_traj(filename <span class="op">=</span> name_file_full_traj, </a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">               traj <span class="op">=</span> full_traj, overwrite <span class="op">=</span> <span class="va">True</span>)</a></code></pre></div>
+</div>
+<div id="superposición-de-las-estructuras" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Superposición de las estructuras</h3>
+<p>Bien, ahora podemos comenzar con el análisis de la trayectoria. Si bien, en general debemos enfocarnos en la fase de producción, para este ejemplo comenzaremos observando la evolución conformacional de la proteína a través de todas las fases de la trayectoria.<br />
+Primero vamos a superponer todas las conformaciones de la proteína. Para ello, el método superpose realiza moviemientos translacionales y rotacionales de forma iterativa minimizando el RMSD entre todas las confromaciones. Observa que el alineamiento lo realizaremos considerando los carbonos alfa únicamente de los residuos 4 a 17, es decir, hemos omitido los primeros y los últimos tres reiduos de la proteína. Si lo deseas puedes reducir o extender esta selección.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Superposición de los frames</span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">full_traj.superpose(mask <span class="op">=</span> <span class="st">&#39;:4-17@CA&#39;</span>, ref <span class="op">=</span> <span class="dv">0</span>) </a>
+<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="co"># Por default el primer frame es tomado como referencia</span></a></code></pre></div>
+<pre><code>## pytraj.Trajectory, 5348 frames: 
+## Size: 0.036339 (GB)
+## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
+## </code></pre>
+</div>
+<div id="visualización-de-la-trayectoria" class="section level3">
+<h3><span class="header-section-number">1.3.3</span> Visualización de la trayectoria</h3>
+<p>Podemos usar nglview para visualizar la tryectoria con los frames superpuestos.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb39-1" data-line-number="1">full_traj_sup_view <span class="op">=</span> nv.show_pytraj(full_traj)</a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">full_traj_sup_view.add_representation(<span class="st">&quot;licorice&quot;</span>)</a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">full_traj_sup_view</a></code></pre></div>
+</div>
+</div>
+</div>
+<div id="rmsd-y-rmsf" class="section level1">
+<h1><span class="header-section-number">2</span> RMSD y RMSF</h1>
+<div id="cálculo-del-rmsd" class="section level2">
+<h2><span class="header-section-number">2.1</span> Cálculo del RMSD</h2>
+<p>Ahora procederemos a calcular el rmsd de todos los frames de la trayectoria con respecto a una estructura de referencia.<br />
+Como primer ejemplo usaremos la estructura lineal usando el parámetro ref.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Cálculo del RMSD de la trayectoria total</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="co"># tomando como referencia la estructura inicial (lineal)</span></a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">rmsd_full_REF_lineal <span class="op">=</span> pyt.rmsd(traj <span class="op">=</span> full_traj, </a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">                                mask <span class="op">=</span> <span class="st">&#39;:4-17,@CA&#39;</span>, </a>
+<a class="sourceLine" id="cb40-5" data-line-number="5">                                ref <span class="op">=</span> init_struc)</a></code></pre></div>
+<div id="grafica-de-rmsd" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Grafica de RMSD</h3>
+<p>Para graficar el RMSD importamos las librerías matplotlib y seaborn y establecemos algunos parámetros por default para las gráficas.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Importamos las librerías y parámetros para generar las gráficas</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="im">from</span>  matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="im">import</span> seaborn <span class="im">as</span> sns</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="im">import</span> pylab</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5">sns.<span class="bu">set</span>( context <span class="op">=</span> <span class="st">&#39;talk&#39;</span>, style <span class="op">=</span> <span class="st">&#39;ticks&#39;</span>, palette <span class="op">=</span> <span class="st">&quot;Spectral&quot;</span>)</a>
+<a class="sourceLine" id="cb41-6" data-line-number="6">pylab.rcParams[<span class="st">&#39;figure.figsize&#39;</span>] <span class="op">=</span> (<span class="dv">15</span>, <span class="dv">5</span>)</a></code></pre></div>
+<p>Ahora generamos la gráfica de la trayectoria total:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Creamos la figura del RMSD de la trayectoria total</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">plt.scatter( x <span class="op">=</span> <span class="bu">range</span>(full_traj.n_frames), </a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">             y <span class="op">=</span> rmsd_full_REF_lineal, s <span class="op">=</span> <span class="dv">20</span>, alpha <span class="op">=</span> <span class="fl">0.3</span> )</a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">plt.title(<span class="st">&quot;RMSD trayectoria TOTAL. Ref = conformación lineal&quot;</span>)</a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">plt.xlabel(<span class="st">&quot;# Frame&quot;</span>)</a>
+<a class="sourceLine" id="cb42-6" data-line-number="6">plt.show()</a></code></pre></div>
+<p><img src="analisis_traj_files/figure-html/unnamed-chunk-22-1.png" /><!-- --></p>
+<p>Como es de esperarse, conforme el tiempo de simulación avanza hay un aumento en el RMSD de cada frame con respecto a la conformación inicial.<br />
+Ahora bien, para un análisis más interesante usaremos como referencia la estructura por NMR de la proteína, con el objetivo de saber si, a lo largo de la simulación, las estructura de la proteína se aproxima a la estructura experimental.<br />
+Para ello cargamos la estructura NMR de la proteína.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Cargamos la estructura NMR</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">nmr_strc <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/1l2y_Hs.pdb&#39;</span>,</a>
+<a class="sourceLine" id="cb43-3" data-line-number="3">                  top <span class="op">=</span> <span class="st">&#39;./docs/1L2Y/5-traj_analysis/1l2y_Hs.psf&#39;</span>)</a></code></pre></div>
+<p>Calculamos el RMSD de la trayectoria usando como referencia a nmr_strc. Seguido de ello, generamos la gráfica.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb44-1" data-line-number="1">rmsd_full_REF_nmr <span class="op">=</span> pyt.rmsd( traj <span class="op">=</span> full_traj, </a>
+<a class="sourceLine" id="cb44-2" data-line-number="2">                                mask <span class="op">=</span> <span class="st">&#39;:4-17,@CA&#39;</span>, </a>
+<a class="sourceLine" id="cb44-3" data-line-number="3">                                ref <span class="op">=</span> nmr_strc)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb45-1" data-line-number="1">plt.scatter( x <span class="op">=</span> <span class="bu">range</span>(full_traj.n_frames), y <span class="op">=</span> rmsd_full_REF_nmr, </a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">             s <span class="op">=</span> <span class="dv">20</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, c<span class="op">=</span><span class="st">&#39;orange&#39;</span> )</a>
+<a class="sourceLine" id="cb45-3" data-line-number="3">plt.title(<span class="st">&quot;RMSD trayectoria TOTAL. Ref = conformación NMR 1l2y&quot;</span>)</a>
+<a class="sourceLine" id="cb45-4" data-line-number="4">plt.xlabel(<span class="st">&quot;# Frame&quot;</span>)</a>
+<a class="sourceLine" id="cb45-5" data-line-number="5">plt.show()</a></code></pre></div>
+<p><img src="analisis_traj_files/figure-html/unnamed-chunk-25-1.png" /><!-- --></p>
+<p>Como ves, al principio de la simulación la conformación inicial y la estructura por NMR son muy distintas (entre 6 a 8 A), sin embargo, a lo largo de la dinámica y sobre todo en la producción, la conformación de la porteína tiende a ser más parecida a la estructura NMR.</p>
+<p>Finalmente, visualicemos únicamente la fase de producción con ambas referencias:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
+<a class="sourceLine" id="cb46-2" data-line-number="2"><span class="co"># Creamos una tabla con pandas</span></a>
+<a class="sourceLine" id="cb46-3" data-line-number="3"><span class="co"># Dado que la producción corresponde a los últimos 5000 frames,</span></a>
+<a class="sourceLine" id="cb46-4" data-line-number="4"><span class="co"># usamos el slicing [-5000:] para extraer esos últimos 5000 datos</span></a>
+<a class="sourceLine" id="cb46-5" data-line-number="5">rmsd_prod <span class="op">=</span> pd.DataFrame({<span class="st">&quot;Ref_lineal&quot;</span>: rmsd_full_REF_lineal[<span class="op">-</span><span class="dv">5000</span>:], </a>
+<a class="sourceLine" id="cb46-6" data-line-number="6">                          <span class="st">&quot;Ref_NMR&quot;</span>: rmsd_full_REF_nmr[<span class="op">-</span><span class="dv">5000</span>:]})</a>
+<a class="sourceLine" id="cb46-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb46-8" data-line-number="8"><span class="co"># Sólo por variar, vamos a usar seaborn para generar el gráfico:</span></a>
+<a class="sourceLine" id="cb46-9" data-line-number="9">ax <span class="op">=</span> sns.lineplot(data <span class="op">=</span> rmsd_prod)</a>
+<a class="sourceLine" id="cb46-10" data-line-number="10">ax.set_title(<span class="st">&quot;RMSD producción&quot;)</span></a></code></pre></div>
+<p><img src="analisis_traj_files/figure-html/unnamed-chunk-26-1.png" /><!-- --></p>
+</div>
+</div>
+<div id="cálculo-del-rmsf" class="section level2">
+<h2><span class="header-section-number">2.2</span> Cálculo del RMSF</h2>
+<p>Vamos a finalizar este análisis evaluando el RMSF de la proteína a lo largo de la fase de producción. Para ello, primero vamos a superponer toda la trayectoria a un frame promedio.</p>
+<div id="obtención-del-frame-promedio-y-superposición-de-la-trayectoria" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Obtención del frame promedio y superposición de la trayectoria</h3>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co"># Obtenemos el frame promedio</span></a>
+<a class="sourceLine" id="cb47-2" data-line-number="2">avg_prod_frame <span class="op">=</span> pyt.mean_structure(traj <span class="op">=</span> prod_traj)</a>
+<a class="sourceLine" id="cb47-3" data-line-number="3"><span class="co"># Y superponemos la trayectoria a dicho frame</span></a>
+<a class="sourceLine" id="cb47-4" data-line-number="4">prod_traj.superpose(ref <span class="op">=</span> avg_prod_frame, mask <span class="op">=</span> <span class="st">&#39;:3-18@CA&#39;</span>)</a></code></pre></div>
+<pre><code>## pytraj.Trajectory, 5000 frames: 
+## Size: 0.033975 (GB)
+## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
+## </code></pre>
+<p>Ahora calculamos el RMSF de toda la producción:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb49-1" data-line-number="1">rmsf_prod_traj <span class="op">=</span> pyt.rmsf( prod_traj, mask <span class="op">=</span> <span class="st">&#39;@CA&#39;</span> )</a>
+<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="co"># Graficamos</span></a>
+<a class="sourceLine" id="cb49-3" data-line-number="3">plt.plot( rmsf_prod_traj.T[<span class="dv">1</span>], c <span class="op">=</span> <span class="st">&#39;red&#39;</span>)</a>
+<a class="sourceLine" id="cb49-4" data-line-number="4">plt.title(<span class="st">&quot;RMSF producción total&quot;</span>)</a>
+<a class="sourceLine" id="cb49-5" data-line-number="5">plt.xlabel(<span class="st">&quot;# Residuo&quot;</span>)</a>
+<a class="sourceLine" id="cb49-6" data-line-number="6">plt.show()</a></code></pre></div>
+<p><img src="analisis_traj_files/figure-html/unnamed-chunk-28-1.png" /><!-- --></p>
+<p>PAra terminar esta sección, un análisis interesante sería ver cómo el RMSF de la proteína va cambiando tomando ciertos intervalos de la producción.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co"># Ahora calculamos el RMSF a diferentes intervalos de la producción</span></a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">num_interv <span class="op">=</span> <span class="dv">5</span></a>
+<a class="sourceLine" id="cb50-3" data-line-number="3">interv_size <span class="op">=</span> <span class="bu">int</span>(prod_traj.n_frames <span class="op">/</span> num_interv)</a>
+<a class="sourceLine" id="cb50-4" data-line-number="4">df_rmsf <span class="op">=</span> pd.DataFrame(</a>
+<a class="sourceLine" id="cb50-5" data-line-number="5">        {<span class="ss">F&#39;Interv. </span><span class="sc">{i}</span><span class="ss">&#39;</span>: pyt.rmsf( prod_traj[i<span class="op">*</span>interv_size : (i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>interv_size],</a>
+<a class="sourceLine" id="cb50-6" data-line-number="6">        mask <span class="op">=</span> <span class="st">&#39;@CA&#39;</span>).T[<span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_interv)} )</a></code></pre></div>
+<p>Graficamos usando <code>seaborn</code>.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb51-1" data-line-number="1">sns.set_palette(<span class="st">&quot;husl&quot;</span>)</a>
+<a class="sourceLine" id="cb51-2" data-line-number="2">ax <span class="op">=</span> sns.lineplot(data <span class="op">=</span> df_rmsf, dashes <span class="op">=</span> <span class="va">False</span>)</a>
+<a class="sourceLine" id="cb51-3" data-line-number="3">ax.set_title(<span class="st">&quot;RMSF producción&quot;)</span></a></code></pre></div>
+<p><img src="analisis_traj_files/figure-html/unnamed-chunk-30-1.png" /><!-- --></p>
+<p>En general, podremos observar que hacia la última parte de la trayectoria, el backbone de la proteína tiende a ser más estable. Continuaremos con más análisis de la trayectoria en la siguiente sección.</p>
+</div>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+  
+  <!-- Counter -->
+  <div class="container text-center">
+  <!-- a href="https://smallseotools.com/visitor-hit-counter/" target="_blank" title="Traffic Counter by Small Seo Tools" rel="nofollow noopener"><img src="https://smallseotools.com/counterDisplay?code=48f89ebe91e41e4e5cf53c9693a62c10&style=0004&pad=5&type=page&initCount=1" alt="Traffic Counter by Small Seo Tools" border="0"></a-->
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2019 Copyright:
+    <a href="https://github.com/jRicciL"> J. Ricci L.</a>
+  </div>
+  <!-- Copyright -->
+  <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+
+</footer>
+<!-- Footer -->
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

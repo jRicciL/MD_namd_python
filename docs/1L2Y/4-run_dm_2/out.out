@@ -1,0 +1,90 @@
+Sender: LSF System <lsfadmin@mn268>
+Subject: Job 472289: <nd_curso> in cluster <cluster1> Done
+
+Job <nd_curso> was submitted from host <mn328> by user <aguila> in cluster <cluster1>.
+Job was executed on host(s) <8*mn268>, in queue <q_hpc>, as user <aguila> in cluster <cluster1>.
+                            <8*mn308>
+                            <8*mn86>
+                            <16*mn250>
+                            <16*mn195>
+                            <16*mn121>
+                            <16*mn100>
+                            <16*mn11>
+                            <16*mn254>
+                            <16*mn189>
+                            <16*mn197>
+                            <16*mn286>
+                            <16*mn66>
+                            <16*mn156>
+                            <16*mn20>
+                            <16*mn23>
+                            <16*mn288>
+                            <8*mn46>
+</home/aguila_g/aguila> was used as the home directory.
+</tmpu/aguila_g/aguila/joel_ricci/curso_din_2019/4-run_dm_2> was used as the working directory.
+Started at Tue Mar 26 13:33:14 2019
+Results reported on Wed Mar 27 20:38:49 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -P project
+#BSUB -J nd_curso
+#BSUB -a openmpi
+#BSUB -n 256
+#BSUB -q q_hpc
+#BSUB -eo err.err
+#BSUB -oo out.out
+
+module purge
+module load namd/2.10
+
+CORES=256
+
+# Minimizacion
+cd 1_min
+mpirun -np $CORES namd2 ./1_min.conf.tcl > 1_min.log
+wait
+
+cd ../2_sa
+mpirun -np $CORES namd2 ./2_sa.conf.tcl > 2_sa.log
+wait
+
+cd ../3_eq
+mpirun -np $CORES namd2 ./3_eq.conf.tcl > 3_eq.log
+wait
+
+cd ../4_prod
+mpirun -np $CORES namd2 ./4_prod.conf.tcl > 4_prod.log
+#wait
+
+#cd ./5_prod_100_ns
+#mpirun -np $CORES namd2 ./5_prod.conf.tcl > 5_prod.log
+#wait
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   28655486.00 sec.
+    Max Memory :                                 57634.27 MB
+    Average Memory :                             20449.15 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   248088 MB
+    Max Processes :                              265
+    Max Threads :                                513
+
+The output (if any) follows:
+
+
+
+PS:
+
+Read file <err.err> for stderr output of this job.
+

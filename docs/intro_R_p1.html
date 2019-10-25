@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Introducción a la Dinámica Molecular con namd</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Curso de DM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Inicio</a>
+</li>
+<li>
+  <a href="intro_R_p1.html">Introducción</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Dinámica Molecular
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="prep_sistema.html">Preparación del Sistema</a>
+    </li>
+    <li>
+      <a href="parametros_dm.html">Archivos de Configuración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Análisis de Trayectorias
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analisis_traj.html">RMSD y RMSF</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introducción a la Dinámica Molecular con <em>namd</em></h1>
+
+</div>
+
+
+<hr />
+<div id="obtención-y-preparación-del-sistema" class="section level1">
+<h1><span class="header-section-number">1</span> Obtención y preparación del sistema</h1>
+<div id="introducción-al-caso-de-estudio" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introducción al caso de estudio</h2>
+<p>En este tutorial presentamos un ejercicio de Dinámica Molecular basado en el trabajo de Simmerling, <em>et al.</em> (2002), titulado <em>All Atom Structure Prediction and Folding Simulations of a Stable Protein</em>, y en el <strong>Tutorial B3</strong> del software <strong>AMBER</strong>, donde el trabajo de Simmerling es presentado como un caso de estudio. Por lo tanto, lo que aquí se presenta es una reproducción de dicho tutorial pero utilizando el software <strong><em>namd</em></strong>. Esto implica que los métodos aquí usados difieren del Tutorial original y, en su lugar, se fundamentan en el manual de <strong><em>namd</em></strong>.</p>
+<p>Por lo tanto, este documento está basado en los siguientes tutoriales:</p>
+<ul>
+<li><a href="http://ambermd.org/tutorials/basic/tutorial3/"><strong>TUTORIAL B3 AMBER</strong>: <em>All Atom Structure Prediction and Folding Simulations of a Stable Protein</em></a>. Por <strong>Ross Walker</strong>.</li>
+<li><a href="https://www.ks.uiuc.edu/Research/namd/2.13/ug/"><strong>NAMD User’s Guide</strong>. v 2.13</a>. Por <strong>Bernardi, <em>et al.</em>, 2018</strong>.</li>
+<li><strong>Simmerling, C.</strong>, Strockbine, B., Roitberg, A.E., <strong>J. Am. Chem. Soc.</strong>, 2002, 124, 11258-11259. (<a href="http://dx.doi.org/10.1021/ja0273851" class="uri">http://dx.doi.org/10.1021/ja0273851</a>)</li>
+</ul>
+<div id="proteína-trpcage" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Proteína <em>Trpcage</em></h3>
+<div class="viewer_3Dmoljs justify-content-center border" style="height: 400px; width: 100%; position: relative;" data-pdb="1L2Y" data-backgroundcolor="0xffffff" data-style1="cartoon:color=spectrum" data-surface1="opacity:.5;color:white">
+
+</div>
+<blockquote class="blockquote">
+<p class="mb-0">
+This paper describes the simulation of peptide folding using an all atom classical simulation and a slightly modified version of the AMBER FF99 force field. “Trpcage” is a 20 residue amino acid sequence that has been optimised by the Andersen group at the University of Washington. It is currently the smallest protein to display two state folding properties and is stable at room temperature. The small size of this protein makes it an ideal candidate for computational folding simulations. When the original folding simulations were done the experimental structure had not been solved and so the prediction was made without reference to experiment. When the experimental structure was solved the predicted structure was within 1.4 angstroms RMSD. This is exceptionally good for a simulation started from a straight chain linear sequence with no restraints.
+</p>
+<footer class="blockquote-footer">
+Tomado de <cite title="Source Title">TUTORIAL B3 AMBER: Ross Walker</cite>
+</footer>
+</blockquote>
+<p class="lead">
+<a class="btn btn-primary btn-lg btn-block" href="./intro_R_p1.html" role="button">Comenzar</a>
+</p>
+</div>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+  
+  <!-- Counter -->
+  <div class="container text-center">
+  <!-- a href="https://smallseotools.com/visitor-hit-counter/" target="_blank" title="Traffic Counter by Small Seo Tools" rel="nofollow noopener"><img src="https://smallseotools.com/counterDisplay?code=48f89ebe91e41e4e5cf53c9693a62c10&style=0004&pad=5&type=page&initCount=1" alt="Traffic Counter by Small Seo Tools" border="0"></a-->
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2019 Copyright:
+    <a href="https://github.com/jRicciL"> J. Ricci L.</a>
+  </div>
+  <!-- Copyright -->
+  <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+
+</footer>
+<!-- Footer -->
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

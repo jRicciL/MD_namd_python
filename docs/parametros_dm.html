@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Joel Ricci López" />
+
+<meta name="date" content="2019-10-10" />
+
+<title>Parámetros de DM</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Curso de DM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Inicio</a>
+</li>
+<li>
+  <a href="intro_R_p1.html">Introducción</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Dinámica Molecular
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="prep_sistema.html">Preparación del Sistema</a>
+    </li>
+    <li>
+      <a href="parametros_dm.html">Archivos de Configuración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Análisis de Trayectorias
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analisis_traj.html">RMSD y RMSF</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Parámetros de DM</h1>
+<h4 class="author">Joel Ricci López</h4>
+<h4 class="date">10/10/2019</h4>
+
+</div>
+
+
+<div class="sourceCode" id="numCode"><pre class="sourceCode numberSource R numberLines"><code class="sourceCode r"><a class="sourceLine" id="numCode-1" data-line-number="1"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-2" data-line-number="2"><span class="co">## MINIMIZACION: Prueba 1L2Y                               ##</span></a>
+<a class="sourceLine" id="numCode-3" data-line-number="3"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-4" data-line-number="4"></a>
+<a class="sourceLine" id="numCode-5" data-line-number="5"><span class="co"># Archivo de parámetors para realizar dinámica molecular con namd</span></a>
+<a class="sourceLine" id="numCode-6" data-line-number="6"><span class="co"># </span><span class="al">NOTE</span><span class="co">: No incluir acentos</span></a>
+<a class="sourceLine" id="numCode-7" data-line-number="7"></a>
+<a class="sourceLine" id="numCode-8" data-line-number="8"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-9" data-line-number="9"><span class="co">## PARÁMETROS AJUSTABLES                                   ##</span></a>
+<a class="sourceLine" id="numCode-10" data-line-number="10"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-11" data-line-number="11"></a>
+<a class="sourceLine" id="numCode-12" data-line-number="12"><span class="co">## Declara el nombre del archivo .pdb y psf (sin extenciones)</span></a>
+<a class="sourceLine" id="numCode-13" data-line-number="13">set inputname      tc5b_wb</a>
+<a class="sourceLine" id="numCode-14" data-line-number="14"><span class="co">## Lee los archivos de coordenadas (pdb) y topologia (psf)</span></a>
+<a class="sourceLine" id="numCode-15" data-line-number="15">structure          <span class="op">$</span>inputname.psf</a>
+<a class="sourceLine" id="numCode-16" data-line-number="16">coordinates        <span class="op">$</span>inputname.pdb</a>
+<a class="sourceLine" id="numCode-17" data-line-number="17"><span class="co">## set restart        min_eq</span></a>
+<a class="sourceLine" id="numCode-18" data-line-number="18"></a>
+<a class="sourceLine" id="numCode-19" data-line-number="19"><span class="co">## Nombre de los archivos de salida</span></a>
+<a class="sourceLine" id="numCode-20" data-line-number="20">outputName         <span class="op">$</span>{inputname}_min</a>
+<a class="sourceLine" id="numCode-21" data-line-number="21">set temperature    <span class="dv">0</span></a>
+<a class="sourceLine" id="numCode-22" data-line-number="22"></a>
+<a class="sourceLine" id="numCode-23" data-line-number="23"><span class="co"># Continua una simulacion desde un archivo restart 0 = NO, 1 = SI</span></a>
+<a class="sourceLine" id="numCode-24" data-line-number="24"><span class="co"># En este caso no usamos archivos restart</span></a>
+<a class="sourceLine" id="numCode-25" data-line-number="25"><span class="cf">if</span> {<span class="dv">0</span>} {</a>
+<a class="sourceLine" id="numCode-26" data-line-number="26">binCoordinates     <span class="op">$</span>restart.restart.coor</a>
+<a class="sourceLine" id="numCode-27" data-line-number="27"><span class="co"># Si se incluyen velocidades se debe remover temperatura</span></a>
+<a class="sourceLine" id="numCode-28" data-line-number="28"><span class="co"># Pues esta esta ya dada por la velocidad de los atomos del archivo restart</span></a>
+<a class="sourceLine" id="numCode-29" data-line-number="29">binVelocities      <span class="op">$</span>restart.restart.vel</a>
+<a class="sourceLine" id="numCode-30" data-line-number="30">extendedSystem     <span class="op">$</span>restart.restart.xsc</a>
+<a class="sourceLine" id="numCode-31" data-line-number="31">} </a>
+<a class="sourceLine" id="numCode-32" data-line-number="32"></a>
+<a class="sourceLine" id="numCode-33" data-line-number="33">binaryoutput       off</a>
+<a class="sourceLine" id="numCode-34" data-line-number="34">firsttimestep      <span class="dv">0</span></a>
+<a class="sourceLine" id="numCode-35" data-line-number="35"></a>
+<a class="sourceLine" id="numCode-36" data-line-number="36"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-37" data-line-number="37"><span class="co">## PARAMETROS DE SIMULACION                                ##</span></a>
+<a class="sourceLine" id="numCode-38" data-line-number="38"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-39" data-line-number="39"></a>
+<a class="sourceLine" id="numCode-40" data-line-number="40"><span class="co"># Archivos de parametros de Charmm</span></a>
+<a class="sourceLine" id="numCode-41" data-line-number="41">paraTypeCharmm      on</a>
+<a class="sourceLine" id="numCode-42" data-line-number="42"><span class="co"># Dirección del archivo de parametros</span></a>
+<a class="sourceLine" id="numCode-43" data-line-number="43">parameters          .<span class="op">/</span>par_all27_prot_lipid.prm ;</a>
+<a class="sourceLine" id="numCode-44" data-line-number="44"></a>
+<a class="sourceLine" id="numCode-45" data-line-number="45"><span class="co">## </span><span class="al">NOTE</span><span class="co">: No usar temperatura para velocidades iniciales</span></a>
+<a class="sourceLine" id="numCode-46" data-line-number="46"><span class="co">## si se ha especificado un archivo .vel!</span></a>
+<a class="sourceLine" id="numCode-47" data-line-number="47"><span class="co">## Considera que al minimizar, este parametro no es usado</span></a>
+<a class="sourceLine" id="numCode-48" data-line-number="48">temperature         <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-49" data-line-number="49"> </a>
+<a class="sourceLine" id="numCode-50" data-line-number="50"><span class="co">## Condiciones periódicas de frontera</span></a>
+<a class="sourceLine" id="numCode-51" data-line-number="51"><span class="co">## </span><span class="al">NOTE</span><span class="co">: No especificar cell basis si tambien se especifica </span></a>
+<a class="sourceLine" id="numCode-52" data-line-number="52"><span class="co">## un archivo .xsc!</span></a>
+<a class="sourceLine" id="numCode-53" data-line-number="53"><span class="cf">if</span> {<span class="dv">1</span>} {</a>
+<a class="sourceLine" id="numCode-54" data-line-number="54">cellBasisVector1    <span class="fl">61.51300048828125</span>   <span class="fl">0.0</span> <span class="fl">0.0</span></a>
+<a class="sourceLine" id="numCode-55" data-line-number="55">cellBasisVector2    <span class="fl">0.0</span> <span class="fl">63.739999771118164</span>  <span class="fl">0.0</span></a>
+<a class="sourceLine" id="numCode-56" data-line-number="56">cellBasisVector3    <span class="fl">0.0</span> <span class="fl">0.0</span> <span class="fl">51.224998474121094</span></a>
+<a class="sourceLine" id="numCode-57" data-line-number="57">cellOrigin  <span class="fl">19.30879020690918</span>   <span class="fl">25.521724700927734</span>  <span class="fl">5.089336395263672</span></a>
+<a class="sourceLine" id="numCode-58" data-line-number="58">}</a>
+<a class="sourceLine" id="numCode-59" data-line-number="59"></a>
+<a class="sourceLine" id="numCode-60" data-line-number="60">wrapWater           on</a>
+<a class="sourceLine" id="numCode-61" data-line-number="61">wrapAll             on</a>
+<a class="sourceLine" id="numCode-62" data-line-number="62"></a>
+<a class="sourceLine" id="numCode-63" data-line-number="63"><span class="co">## Parámetros de campo de fuerza</span></a>
+<a class="sourceLine" id="numCode-64" data-line-number="64">exclude             scaled1<span class="dv">-4</span></a>
+<a class="sourceLine" id="numCode-65" data-line-number="65"><span class="dv">1</span><span class="op">-</span>4scaling          <span class="fl">1.0</span></a>
+<a class="sourceLine" id="numCode-66" data-line-number="66">cutoff              <span class="fl">12.</span></a>
+<a class="sourceLine" id="numCode-67" data-line-number="67">switching           on</a>
+<a class="sourceLine" id="numCode-68" data-line-number="68">switchdist          <span class="fl">10.</span></a>
+<a class="sourceLine" id="numCode-69" data-line-number="69">pairlistdist        <span class="fl">13.5</span></a>
+<a class="sourceLine" id="numCode-70" data-line-number="70"></a>
+<a class="sourceLine" id="numCode-71" data-line-number="71"><span class="co">## Parámetros de integracion</span></a>
+<a class="sourceLine" id="numCode-72" data-line-number="72">timestep            <span class="fl">1.0</span>    <span class="co"># t de integracion en fs</span></a>
+<a class="sourceLine" id="numCode-73" data-line-number="73">rigidBonds          water  <span class="co"># all/ none /water</span></a>
+<a class="sourceLine" id="numCode-74" data-line-number="74">stepspercycle       <span class="dv">10</span>  <span class="co"># pasos por ciclo de eval.</span></a>
+<a class="sourceLine" id="numCode-75" data-line-number="75">nonbondedFreq       <span class="dv">1</span>   <span class="co"># Freq de eval. para pares no enlazados</span></a>
+<a class="sourceLine" id="numCode-76" data-line-number="76">fullElectFrequency  <span class="dv">2</span>   <span class="co"># Freq de eval. para inter. elec.</span></a>
+<a class="sourceLine" id="numCode-77" data-line-number="77"></a>
+<a class="sourceLine" id="numCode-78" data-line-number="78"><span class="co">## PME (for full-system periodic electrostatics)</span></a>
+<a class="sourceLine" id="numCode-79" data-line-number="79"><span class="co">## El tamaño del grid determina parcilamente la exactitud </span></a>
+<a class="sourceLine" id="numCode-80" data-line-number="80"><span class="co">## y eficiencia del PME. Por velocidad, PMEGridSize_ deberia </span></a>
+<a class="sourceLine" id="numCode-81" data-line-number="81"><span class="co">## tener dimensiones cuyos factores sean enteros pequeños (2, 3 and 5).</span></a>
+<a class="sourceLine" id="numCode-82" data-line-number="82"><span class="cf">if</span> {<span class="dv">1</span>} {</a>
+<a class="sourceLine" id="numCode-83" data-line-number="83">PME                 yes</a>
+<a class="sourceLine" id="numCode-84" data-line-number="84">PMEGridSizeX        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-85" data-line-number="85">PMEGridSizeY        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-86" data-line-number="86">PMEGridSizeZ        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-87" data-line-number="87">}</a>
+<a class="sourceLine" id="numCode-88" data-line-number="88"></a>
+<a class="sourceLine" id="numCode-89" data-line-number="89"></a>
+<a class="sourceLine" id="numCode-90" data-line-number="90"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-91" data-line-number="91"><span class="co">## EXECUTION SCRIPT                                        ##</span></a>
+<a class="sourceLine" id="numCode-92" data-line-number="92"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-93" data-line-number="93"></a>
+<a class="sourceLine" id="numCode-94" data-line-number="94"><span class="co"># Minimization de 10000 pasos</span></a>
+<a class="sourceLine" id="numCode-95" data-line-number="95">minimize            <span class="dv">10000</span></a>
+<a class="sourceLine" id="numCode-96" data-line-number="96">exit</a></code></pre></div>
+<div class="sourceCode" id="numCode"><pre class="sourceCode numberSource R numberLines"><code class="sourceCode r"><a class="sourceLine" id="numCode-1" data-line-number="1"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-2" data-line-number="2"><span class="co">## CALENTAMIENTO NVT: Prueba 1L2Y                          ##</span></a>
+<a class="sourceLine" id="numCode-3" data-line-number="3"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-4" data-line-number="4"></a>
+<a class="sourceLine" id="numCode-5" data-line-number="5"><span class="co">## Escribe aquí los comentarios necesarios para describir el trabajo</span></a>
+<a class="sourceLine" id="numCode-6" data-line-number="6"></a>
+<a class="sourceLine" id="numCode-7" data-line-number="7"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-8" data-line-number="8"><span class="co">## PARÁMETROS AJUSTABLES                                   ##</span></a>
+<a class="sourceLine" id="numCode-9" data-line-number="9"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-10" data-line-number="10"></a>
+<a class="sourceLine" id="numCode-11" data-line-number="11"><span class="co">## Declara el nombre del archivo .pdb y psf (sin extenciones)</span></a>
+<a class="sourceLine" id="numCode-12" data-line-number="12">set inputname      tc5b_wb</a>
+<a class="sourceLine" id="numCode-13" data-line-number="13"><span class="co">## Lee los archivos de coordenadas (pdb) y topologia (psf)</span></a>
+<a class="sourceLine" id="numCode-14" data-line-number="14">structure          <span class="op">$</span>inputname.psf</a>
+<a class="sourceLine" id="numCode-15" data-line-number="15">coordinates        <span class="op">$</span>inputname.pdb</a>
+<a class="sourceLine" id="numCode-16" data-line-number="16"><span class="co">## Ahora si se utiliza un archivo restart, el de la minimizacion</span></a>
+<a class="sourceLine" id="numCode-17" data-line-number="17">set restart        <span class="op">$</span>{inputname}_min</a>
+<a class="sourceLine" id="numCode-18" data-line-number="18"></a>
+<a class="sourceLine" id="numCode-19" data-line-number="19"><span class="co">## Nombre de los archivos de salida</span></a>
+<a class="sourceLine" id="numCode-20" data-line-number="20">outputName         <span class="op">$</span>{inputname}_heat</a>
+<a class="sourceLine" id="numCode-21" data-line-number="21">set temperature    <span class="dv">0</span></a>
+<a class="sourceLine" id="numCode-22" data-line-number="22"></a>
+<a class="sourceLine" id="numCode-23" data-line-number="23"><span class="co"># Continua una simulacion desde un archivo restart 0 = NO, 1 = SI</span></a>
+<a class="sourceLine" id="numCode-24" data-line-number="24"><span class="cf">if</span> {<span class="dv">1</span>} {</a>
+<a class="sourceLine" id="numCode-25" data-line-number="25">binCoordinates     <span class="op">$</span>restart.restart.coor</a>
+<a class="sourceLine" id="numCode-26" data-line-number="26"><span class="co">## Si se incluyen velocidades se debe remover temperatura</span></a>
+<a class="sourceLine" id="numCode-27" data-line-number="27"><span class="co">## Pues esta esta ya dada por la velocidad de los atomos del archivo restart</span></a>
+<a class="sourceLine" id="numCode-28" data-line-number="28"><span class="co">## No se utilizan velocidades pues el restart de la minimizacion no las genera</span></a>
+<a class="sourceLine" id="numCode-29" data-line-number="29"><span class="co">## Pero si usamos el archivo .xsc con los datos de las dimensiones de la caja</span></a>
+<a class="sourceLine" id="numCode-30" data-line-number="30"><span class="co"># binVelocities      $restart.restart.vel</span></a>
+<a class="sourceLine" id="numCode-31" data-line-number="31">extendedSystem     <span class="op">$</span>restart.restart.xsc</a>
+<a class="sourceLine" id="numCode-32" data-line-number="32">} </a>
+<a class="sourceLine" id="numCode-33" data-line-number="33"></a>
+<a class="sourceLine" id="numCode-34" data-line-number="34">binaryoutput       off</a>
+<a class="sourceLine" id="numCode-35" data-line-number="35">firsttimestep      <span class="dv">0</span></a>
+<a class="sourceLine" id="numCode-36" data-line-number="36"></a>
+<a class="sourceLine" id="numCode-37" data-line-number="37"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-38" data-line-number="38"><span class="co">## PARAMETROS DE SIMULACION                                ##</span></a>
+<a class="sourceLine" id="numCode-39" data-line-number="39"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-40" data-line-number="40"></a>
+<a class="sourceLine" id="numCode-41" data-line-number="41"><span class="co"># Archivos de parametros de Charmm</span></a>
+<a class="sourceLine" id="numCode-42" data-line-number="42">paraTypeCharmm      on</a>
+<a class="sourceLine" id="numCode-43" data-line-number="43">parameters          .<span class="op">/</span>par_all27_prot_lipid.prm</a>
+<a class="sourceLine" id="numCode-44" data-line-number="44"></a>
+<a class="sourceLine" id="numCode-45" data-line-number="45"><span class="co">## </span><span class="al">NOTE</span><span class="co">: No usar temperatura para velocidades iniciales</span></a>
+<a class="sourceLine" id="numCode-46" data-line-number="46"><span class="co">## si se ha especificado un archivo .vel!</span></a>
+<a class="sourceLine" id="numCode-47" data-line-number="47">temperature         <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-48" data-line-number="48"> </a>
+<a class="sourceLine" id="numCode-49" data-line-number="49"><span class="co">## Condiciones periódicas de frontera</span></a>
+<a class="sourceLine" id="numCode-50" data-line-number="50"><span class="co">## </span><span class="al">NOTE</span><span class="co">: No especificar cell basis si tambien se especifica </span></a>
+<a class="sourceLine" id="numCode-51" data-line-number="51"><span class="co">## un archivo .xsc! En este caso ponemos &quot;0&quot; pues el archivo </span></a>
+<a class="sourceLine" id="numCode-52" data-line-number="52"><span class="co">## restart contiene también las dim del sistema</span></a>
+<a class="sourceLine" id="numCode-53" data-line-number="53"><span class="cf">if</span> {<span class="dv">0</span>} { </a>
+<a class="sourceLine" id="numCode-54" data-line-number="54">cellBasisVector1    <span class="fl">61.51300048828125</span>   <span class="fl">0.0</span> <span class="fl">0.0</span></a>
+<a class="sourceLine" id="numCode-55" data-line-number="55">cellBasisVector2    <span class="fl">0.0</span> <span class="fl">63.739999771118164</span>  <span class="fl">0.0</span></a>
+<a class="sourceLine" id="numCode-56" data-line-number="56">cellBasisVector3    <span class="fl">0.0</span> <span class="fl">0.0</span> <span class="fl">51.224998474121094</span></a>
+<a class="sourceLine" id="numCode-57" data-line-number="57">cellOrigin  <span class="fl">19.30879020690918</span>   <span class="fl">25.521724700927734</span>  <span class="fl">5.089336395263672</span></a>
+<a class="sourceLine" id="numCode-58" data-line-number="58">}</a>
+<a class="sourceLine" id="numCode-59" data-line-number="59"></a>
+<a class="sourceLine" id="numCode-60" data-line-number="60">wrapWater           on</a>
+<a class="sourceLine" id="numCode-61" data-line-number="61">wrapAll             on</a>
+<a class="sourceLine" id="numCode-62" data-line-number="62"></a>
+<a class="sourceLine" id="numCode-63" data-line-number="63"><span class="co">## Parámetros de campo de fuerza</span></a>
+<a class="sourceLine" id="numCode-64" data-line-number="64">exclude             scaled1<span class="dv">-4</span></a>
+<a class="sourceLine" id="numCode-65" data-line-number="65"><span class="dv">1</span><span class="op">-</span>4scaling          <span class="fl">1.0</span></a>
+<a class="sourceLine" id="numCode-66" data-line-number="66">cutoff              <span class="fl">12.</span></a>
+<a class="sourceLine" id="numCode-67" data-line-number="67">switching           on</a>
+<a class="sourceLine" id="numCode-68" data-line-number="68">switchdist          <span class="fl">10.</span></a>
+<a class="sourceLine" id="numCode-69" data-line-number="69">pairlistdist        <span class="fl">13.5</span></a>
+<a class="sourceLine" id="numCode-70" data-line-number="70"></a>
+<a class="sourceLine" id="numCode-71" data-line-number="71"><span class="co">## Parámetros de integracion</span></a>
+<a class="sourceLine" id="numCode-72" data-line-number="72">timestep            <span class="fl">1.0</span>    <span class="co"># t de integracion en fs</span></a>
+<a class="sourceLine" id="numCode-73" data-line-number="73">rigidBonds          water  <span class="co"># all/ none /water</span></a>
+<a class="sourceLine" id="numCode-74" data-line-number="74">stepspercycle       <span class="dv">10</span>  <span class="co"># pasos por ciclo de eval.</span></a>
+<a class="sourceLine" id="numCode-75" data-line-number="75">nonbondedFreq       <span class="dv">1</span>   <span class="co"># Freq de eval. para pares no enlazados</span></a>
+<a class="sourceLine" id="numCode-76" data-line-number="76">fullElectFrequency  <span class="dv">2</span>   <span class="co"># Freq de eval. para inter. elec.</span></a>
+<a class="sourceLine" id="numCode-77" data-line-number="77"></a>
+<a class="sourceLine" id="numCode-78" data-line-number="78"><span class="co">## PME (for full-system periodic electrostatics)</span></a>
+<a class="sourceLine" id="numCode-79" data-line-number="79"><span class="co">## El tamaño del grid determina parcilamente la exactitud </span></a>
+<a class="sourceLine" id="numCode-80" data-line-number="80"><span class="co">## y eficiencia del PME. Por velocidad, PMEGridSize_ deberia </span></a>
+<a class="sourceLine" id="numCode-81" data-line-number="81"><span class="co">## tener dimensiones cuyos factores sean enteros pequeños (2, 3 and 5).</span></a>
+<a class="sourceLine" id="numCode-82" data-line-number="82"><span class="cf">if</span> {<span class="dv">1</span>} {</a>
+<a class="sourceLine" id="numCode-83" data-line-number="83">PME                 yes</a>
+<a class="sourceLine" id="numCode-84" data-line-number="84">PMEGridSizeX        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-85" data-line-number="85">PMEGridSizeY        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-86" data-line-number="86">PMEGridSizeZ        <span class="dv">64</span> ;<span class="co"># 2**6</span></a>
+<a class="sourceLine" id="numCode-87" data-line-number="87">}</a>
+<a class="sourceLine" id="numCode-88" data-line-number="88"></a>
+<a class="sourceLine" id="numCode-89" data-line-number="89"><span class="co"># Termostato</span></a>
+<a class="sourceLine" id="numCode-90" data-line-number="90">langevin            on    ;<span class="co"># do langevin dynamics</span></a>
+<a class="sourceLine" id="numCode-91" data-line-number="91">langevinDamping     <span class="dv">5</span>     ;<span class="co"># damping coefficient (gamma) of 5/ps</span></a>
+<a class="sourceLine" id="numCode-92" data-line-number="92">langevinTemp        <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-93" data-line-number="93">langevinHydrogen    no    ;<span class="co"># don&#39;t couple langevin bath to hydrogens</span></a>
+<a class="sourceLine" id="numCode-94" data-line-number="94"></a>
+<a class="sourceLine" id="numCode-95" data-line-number="95"><span class="co">## Barsostato: Constant Pressure Control (variable volume)</span></a>
+<a class="sourceLine" id="numCode-96" data-line-number="96"><span class="co">## Si estos parametros se ejecutan ( = &quot;1&quot;) se realizara una simulacion NPT</span></a>
+<a class="sourceLine" id="numCode-97" data-line-number="97"><span class="co">## De otro modo, si = &quot;0&quot;, se realiza una simulacion NVT</span></a>
+<a class="sourceLine" id="numCode-98" data-line-number="98"><span class="co"># Para SA usaremos NVT</span></a>
+<a class="sourceLine" id="numCode-99" data-line-number="99"><span class="cf">if</span> {<span class="dv">0</span>} {</a>
+<a class="sourceLine" id="numCode-100" data-line-number="100">useGroupPressure      yes ;<span class="co"># needed for 2fs steps</span></a>
+<a class="sourceLine" id="numCode-101" data-line-number="101">useFlexibleCell       no  ;<span class="co"># no for water box, yes for membrane</span></a>
+<a class="sourceLine" id="numCode-102" data-line-number="102">useConstantArea       no  ;<span class="co"># no for water box, yes for membrane</span></a>
+<a class="sourceLine" id="numCode-103" data-line-number="103">langevinPiston        on</a>
+<a class="sourceLine" id="numCode-104" data-line-number="104">langevinPistonTarget  <span class="fl">1.01325</span> ;<span class="co">#  in bar -&gt; 1 atm</span></a>
+<a class="sourceLine" id="numCode-105" data-line-number="105">langevinPistonPeriod  <span class="fl">100.0</span></a>
+<a class="sourceLine" id="numCode-106" data-line-number="106">langevinPistonDecay   <span class="fl">50.0</span></a>
+<a class="sourceLine" id="numCode-107" data-line-number="107">langevinPistonTemp    <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-108" data-line-number="108">}</a>
+<a class="sourceLine" id="numCode-109" data-line-number="109"></a>
+<a class="sourceLine" id="numCode-110" data-line-number="110"><span class="co">## Intervalo de guardado de las coordenadas y archivos</span></a>
+<a class="sourceLine" id="numCode-111" data-line-number="111">restartfreq         <span class="dv">10000</span>     ;<span class="co"># 500steps = every 1ps</span></a>
+<a class="sourceLine" id="numCode-112" data-line-number="112">dcdfreq             <span class="dv">10000</span></a>
+<a class="sourceLine" id="numCode-113" data-line-number="113">xstFreq             <span class="dv">10000</span></a>
+<a class="sourceLine" id="numCode-114" data-line-number="114">outputEnergies      <span class="dv">10000</span></a>
+<a class="sourceLine" id="numCode-115" data-line-number="115">outputPressure      <span class="dv">10000</span></a>
+<a class="sourceLine" id="numCode-116" data-line-number="116"></a>
+<a class="sourceLine" id="numCode-117" data-line-number="117"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-118" data-line-number="118"><span class="co">## SCRIPT DE EJECUCION: SIMULATED ANNEALING                ##</span></a>
+<a class="sourceLine" id="numCode-119" data-line-number="119"><span class="co">#############################################################</span></a>
+<a class="sourceLine" id="numCode-120" data-line-number="120"></a>
+<a class="sourceLine" id="numCode-121" data-line-number="121"><span class="co">##   Asigna velocidades a la temperatura dada</span></a>
+<a class="sourceLine" id="numCode-122" data-line-number="122">reinitvels          <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-123" data-line-number="123"></a>
+<a class="sourceLine" id="numCode-124" data-line-number="124"><span class="co">## Ejecuta por 10000 pasos = 10 ps</span></a>
+<a class="sourceLine" id="numCode-125" data-line-number="125"><span class="co">## run 10000</span></a>
+<a class="sourceLine" id="numCode-126" data-line-number="126"></a>
+<a class="sourceLine" id="numCode-127" data-line-number="127"><span class="co">##  temperatura mínima de inicio</span></a>
+<a class="sourceLine" id="numCode-128" data-line-number="128">set temp_min <span class="dv">0</span></a>
+<a class="sourceLine" id="numCode-129" data-line-number="129"><span class="co">##  tempratura máxima</span></a>
+<a class="sourceLine" id="numCode-130" data-line-number="130">set temp_max <span class="dv">400</span></a>
+<a class="sourceLine" id="numCode-131" data-line-number="131"><span class="co">##  temperatura final de la DM</span></a>
+<a class="sourceLine" id="numCode-132" data-line-number="132">set temp_final <span class="dv">310</span></a>
+<a class="sourceLine" id="numCode-133" data-line-number="133"></a>
+<a class="sourceLine" id="numCode-134" data-line-number="134"><span class="co">## ------------------------</span></a>
+<a class="sourceLine" id="numCode-135" data-line-number="135"><span class="co">##  PARTE 1: Incrementar en 50 intervalos de 0 a 400K durante 100 ps</span></a>
+<a class="sourceLine" id="numCode-136" data-line-number="136"><span class="co">### Número  total de pasos, intervalos, incremento y pasos por intervalo para dcada ciclo</span></a>
+<a class="sourceLine" id="numCode-137" data-line-number="137">set stps <span class="dv">100000</span></a>
+<a class="sourceLine" id="numCode-138" data-line-number="138">set intv <span class="dv">50</span></a>
+<a class="sourceLine" id="numCode-139" data-line-number="139">set incremento_temp [<span class="kw">expr</span> (<span class="op">$</span>temp_max <span class="op">-</span><span class="st"> </span><span class="er">$</span>temp_min)<span class="op">/</span><span class="er">$</span>intv]</a>
+<a class="sourceLine" id="numCode-140" data-line-number="140">set stps_by_intv [expr <span class="op">$</span>stps<span class="op">/</span><span class="er">$</span>intv]</a>
+<a class="sourceLine" id="numCode-141" data-line-number="141"></a>
+<a class="sourceLine" id="numCode-142" data-line-number="142"><span class="cf">for</span> { set temperature <span class="op">$</span>temp_min } { <span class="op">$</span>temperature <span class="op">&lt;=</span><span class="st"> </span><span class="er">$</span>temp_max } { incr temperature <span class="op">$</span>incremento_temp } {</a>
+<a class="sourceLine" id="numCode-143" data-line-number="143">    </a>
+<a class="sourceLine" id="numCode-144" data-line-number="144">    reassignTemp <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-145" data-line-number="145">    langevinTemp <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-146" data-line-number="146">    run <span class="op">$</span>stps_by_intv</a>
+<a class="sourceLine" id="numCode-147" data-line-number="147">}</a>
+<a class="sourceLine" id="numCode-148" data-line-number="148"></a>
+<a class="sourceLine" id="numCode-149" data-line-number="149"><span class="co"># -------------------------</span></a>
+<a class="sourceLine" id="numCode-150" data-line-number="150"><span class="co">#   PARTE 2: Mantiene la temperatura a 400K por 100 ps</span></a>
+<a class="sourceLine" id="numCode-151" data-line-number="151">run <span class="dv">100000</span></a>
+<a class="sourceLine" id="numCode-152" data-line-number="152"></a>
+<a class="sourceLine" id="numCode-153" data-line-number="153"><span class="co"># -------------------------</span></a>
+<a class="sourceLine" id="numCode-154" data-line-number="154"><span class="co">#   PARTE 3: Disminuye en 50 intervalos la Temp de 400K a 310K en 0.2 ns</span></a>
+<a class="sourceLine" id="numCode-155" data-line-number="155"><span class="co">#   temperature == 400</span></a>
+<a class="sourceLine" id="numCode-156" data-line-number="156">set temp_final <span class="dv">310</span></a>
+<a class="sourceLine" id="numCode-157" data-line-number="157"></a>
+<a class="sourceLine" id="numCode-158" data-line-number="158">set stps <span class="dv">200000</span></a>
+<a class="sourceLine" id="numCode-159" data-line-number="159">set intv <span class="dv">50</span></a>
+<a class="sourceLine" id="numCode-160" data-line-number="160">set decremento_temp [<span class="kw">expr</span> (<span class="op">$</span>temp_final <span class="op">-</span><span class="st"> </span><span class="er">$</span>temp_max)<span class="op">/</span><span class="er">$</span>intv]</a>
+<a class="sourceLine" id="numCode-161" data-line-number="161">set stps_by_intv [expr <span class="op">$</span>stps<span class="op">/</span><span class="er">$</span>intv]</a>
+<a class="sourceLine" id="numCode-162" data-line-number="162"></a>
+<a class="sourceLine" id="numCode-163" data-line-number="163"><span class="cf">for</span> { set temperature <span class="op">$</span>temp_max } { <span class="op">$</span>temperature <span class="op">&gt;=</span><span class="st"> </span><span class="er">$</span>temp_final } { incr temperature <span class="op">$</span>decremento_temp } {</a>
+<a class="sourceLine" id="numCode-164" data-line-number="164">    </a>
+<a class="sourceLine" id="numCode-165" data-line-number="165">    reassignTemp <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-166" data-line-number="166">    langevinTemp <span class="op">$</span>temperature</a>
+<a class="sourceLine" id="numCode-167" data-line-number="167">    run <span class="op">$</span>stps_by_intv</a>
+<a class="sourceLine" id="numCode-168" data-line-number="168">}</a>
+<a class="sourceLine" id="numCode-169" data-line-number="169"></a>
+<a class="sourceLine" id="numCode-170" data-line-number="170"><span class="co"># -------------------------</span></a>
+<a class="sourceLine" id="numCode-171" data-line-number="171"><span class="co">#   PARTE 4: Templado - &gt; Mantiene a 310K por 600 000 fs por 0.6 ns</span></a>
+<a class="sourceLine" id="numCode-172" data-line-number="172">run <span class="dv">600000</span></a>
+<a class="sourceLine" id="numCode-173" data-line-number="173"></a>
+<a class="sourceLine" id="numCode-174" data-line-number="174"><span class="co"># -----</span></a>
+<a class="sourceLine" id="numCode-175" data-line-number="175"><span class="co"># Tiempo total de Simulated annealing : 1 ns</span></a>
+<a class="sourceLine" id="numCode-176" data-line-number="176"></a></code></pre></div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+  
+  <!-- Counter -->
+  <div class="container text-center">
+  <!-- a href="https://smallseotools.com/visitor-hit-counter/" target="_blank" title="Traffic Counter by Small Seo Tools" rel="nofollow noopener"><img src="https://smallseotools.com/counterDisplay?code=48f89ebe91e41e4e5cf53c9693a62c10&style=0004&pad=5&type=page&initCount=1" alt="Traffic Counter by Small Seo Tools" border="0"></a-->
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2019 Copyright:
+    <a href="https://github.com/jRicciL"> J. Ricci L.</a>
+  </div>
+  <!-- Copyright -->
+  <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+
+</footer>
+<!-- Footer -->
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

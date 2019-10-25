@@ -1,0 +1,137 @@
+---
+title: "Primera Parte"
+customjs:
+ - http://3Dmol.csb.pitt.edu/build/3Dmol-min.js
+---
+
+# Preparación del sistema
+
+```{#numCode .R .numberLines}
+package require psfgen
+topology ../0-inputs/top_all27_prot_lipid.inp
+pdbalias residue HIS HSE
+pdbalias atom ILE CD1 CD
+segment T {pdb TC5b_input.pdb}
+coordpdb TC5b_input.pdb T
+guesscoord
+writepdb tc5b.pdb
+writepsf tc5b.psf
+```
+
+Este archivo contiene la siguiente información:
+
+1. Cargamos la librería `psfgen` a través de VMD.
+2. Llamámos al archivo de topología `top_all27_prot_lipid.inp`, que se encuentra en el directorio `0-inputs`. Si el archivo está en otro directorio, asegúrate de indicar el *path* en el script.
+3. Renombramos todos los residuos `HIS` a `HSE` para que concuerde con la nomenclatura del archivo de topología.
+4. Renombramos todos los átomos `CD1` (carbonos delta) de los residuos `ILE` como `CD`.
+5. Se crea un segmento __T__ con los átomos del archivo `TC5b_input.pdb`. También se añaden hidrógenos.
+6. Se leen las coordenadas del archivo `TC5b_input.pdb` y se asignan a los átomos del segmento T.
+7. Las coordenadas de los átomos del segmento T que no se hayan podido leer del archivo pdb (hidrógenos, por ejemplo) son asignadas de acuerdo a su definiciín en el archivo de topología.
+8. Se guarda en el directorio actual un nuevo archivo __*.pdb*__, `tc5b.pdb`, correspondiente al segmento __T__.
+9. Se guarda en el directorio actual un archivo __*.psf*__ (*protein structure file*); `tc5b.psf`, con la información estructural de la proteína.
+
+A continuación, vamos a correr el *script* desde la terminal a través del <b>VMD</b> en modo texto. Para ello, ejecuta el siguiente comando en una terminal.
+
+<div class="alert alert-dismissible alert-success">
+<h4 class="alert-heading">¡Atención!</h4>
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  Recuerda que al ejecutar el comando desde la Terminal debes **estar en el directorio**  donde está el archivo `gen_psf.tcl`
+</div>
+
+
+```{bash eval=FALSE}
+vmd -dispdev text -e gen_psf.tcl
+```
+
+Como resultado **VMD** ejecutará `psfgen` usando los comandos indicados en el archivo. Mientras se construye el sistema, la terminal irá arrojando una serie de mensajes:
+
+<pre  class="border border-dark rounded"><code>
+...
+psfgen) Info: writing pdb file tc5b.pdb
+psfgen) Info: Atoms with guessed coordinates will have occupancy of 0.0.
+psfgen) Info: pdb file complete.
+psfgen) Info: writing psf file tc5b.psf
+psfgen) total of 304 atoms
+psfgen) total of 310 bonds
+psfgen) total of 565 angles
+psfgen) total of 843 dihedrals
+psfgen) total of 49 impropers
+psfgen) total of 0 explicit exclusions
+psfgen) total of 18 cross-terms
+psfgen) Info: psf file complete.
+</code></pre>
+
+Si todo sale bien verás que dos nuevos archivos han sido creados en tu carpeta  de trabajo: `tc5b.psf` y `tc5b.pdb`.
+
+<!--Imagen del mapa de flujo con los archivos-->
+
+## Solvatación de la proteína en caja de agua
+
+Ahora procederemos a solvatar a la proteína, es decir, ponerla en una caja de agua que permita aproximar al sistema a un ambiente fisiolǵico.  
+Si has clonado o descargado el repositorio de Github encontrarás en él el un pequeño *script* llamado `solvate_wat_box.tcl` el cual puedes usar directamente para solvatar tu sistema siempre y cuando existan los archivos de entrada necesarios.
+Sin embargo, en este tutorial iremos paso a paso trabajando con los comandos del archivo `solvate_wat_box.tcl`, pero directamente desde la consola __*Tk/Tcl*__ de **VMD**.
+
+1. Crea una nueva carpeta llamada `2-solvatar_wt` y copia en ella los archivos `tc5b.psf` y  `tc5b.pdb`.
+    Abre VMD desde este nuevo directorio y después ve a la pestaña `Extensions > Tk Console`. Esto abrirá una terminal donde procederemos a escribir los siguientes comandos:
+2. Ejecuta:<br>
+<pre class="sourceCode"><code class="inline-code"><span class="kw">set</span> molname "tc5b"</code></pre><br>
+    Esto generará una variable llamada `molname` con el texto `"tc5b"`, que corresponde al nombre de nuestra proteína.
+3. <pre class="sourceCode"><code class="inline-code"><span class="kw">package</span> require solvate</code><br><code class="inline-code"><span class="kw2">solvate</span> <span class="fl">${molname}</span>.psf <span class="fl">${molname}</span>.pdb -t 15 -o <span class="fl">${molname}</span>_temp</code></pre> <br> Solvatará la proteína en una caja de agua con un *padding* de 15 A.
+4. Tras ejecutar la línea anterior, verás que se han creado dos nuevos archivos con el sufijo `_temp` en tu carpeta de trabajo. Y podrás verlos en la ventana de visualización del **VMD**.
+
+## Neutralización del sistema
+
+A continuación vamos a proceder a neutralizar el sistema para obtener una carga neta de 0, para ello agregaremos iones de Cloro o Sodio según se requiera. Por lo tanto, no está de más saber qué carga tiene nuestro sistema antes de neutralizarlo. Para ello, ejecutalo siguiente:
+
+<pre class="sourceCode"><code class="inline-code"><span class="kw">eval</span> "vecadd [[atomselect top all] get charge]"</code>
+</code></pre>
+<pre  class="border border-dark rounded"><code>1.00000018812716
+</code></pre>
+
+Dicho comando obtiene la carga de todos los átomos del sistema (`[atomselect top] get charge`) y procede a sumar dichos valores (`eval vecadd ...`).
+
+Ahora procedemos a neutralizar el sistema:
+
+<pre class="sourceCode"><code class="inline-code"><span class="kw2">autoionize</span> -psf <span class="fl">${molname}</span>_temp.psf -pdb <span class="fl">${molname}</span>_temp.pdb -neutralize -o <span class="fl"><span class="sm">${molname}</span>_wb</span></code></pre>
+
+
+El comando `autoionize` toma como entrada los archivos `_temp.psf` y `_temp.pdb` que creamos en el paso anterior, y la bandera `-neutralize` se encarga de añadir iones de Cloro o Sodio según la carga del sistema. **¿Qué iones y cuántos se agregaron al sistema?** Finalmente, dos nuevos archivos `tc5b_wb.psf` y `tc5b_wb.pdb` son creados en el directorio.  
+Además la ventana `main` del **VMD** mostrará dos sistemas, el `_temp` y el `_wb`, este  último es el que nos interesa y seguiremos trabajando con él en el siguiente apartado. mientras tanto, para avitar confusiones puedes borrar de la sesión de **VMD** todos los sistemas cargados ejecuatando: <code class="inline-code"><span class="kw2">mol</span> delete top</code>.
+
+## Cálculo de las medidas de la caja de agua
+
+Para obtener las medidas de la caja de agua 
+
+<pre class="sourceCode"><code class="inline-code">
+<span class="co"># En caso de haber cerrado la seción del VMD, volvemos a crear la varaible molname.</span>
+<span class="kw">set</span> molname "tc5b"
+<span class="co"># Abrimos los archivos de topología y coordenadas de la proteína.</span>
+<span class="kw2">mol</span> new <span class="fl">${molname}</span>_wb.psf
+<span class="kw2">mol</span> addfile <span class="fl">${molname}</span>_wb.pdb
+<span class="co"># Variable con todos los átomos del sistema neutralizado.</span>
+<span class="kw">set</span> molname "tc5b"  
+<span class="co"># Variable con todos los átomos del sistema neutralizado.</span>
+<span class="kw">set</span> sist_neutro [atomselect top all]
+<span class="co"># Coordenadas mínimas y máximas xyz del sistema.</span>
+<span class="kw">set</span> box_size [measure minmax <span class="fl">$sist_neutro</span>]
+<span class="co"># Coordenadas xyz del centro del sistema.</span>
+<span class="kw">set</span> box_center [measure center <span class="fl">$sist_neutro</span>]
+
+<span class="co"># Guarda en un archivo las dimensiones y centro de la caja</span>
+set file [open box_dims.txt w]
+<span class="co"># Cálculo de las dimensiones [maximo - minimo]</span>
+<span class="kw">set</span> x_dim [expr [lindex [lindex <span class="fl">$box_size</span> 1] 0] - [lindex [lindex <span class="fl">$box_size</span> 0] 0]]
+<span class="kw">set</span> y_dim [expr [lindex [lindex <span class="fl">$box_size</span> 1] 1] - [lindex [lindex <span class="fl">$box_size</span> 0] 1]]
+<span class="kw">set</span> z_dim [expr [lindex [lindex <span class="fl">$box_size</span> 1] 2] - [lindex [lindex <span class="fl">$box_size</span> 0] 2]]
+<span class="co"># Guardamos los datos en el archivo.</span>
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellBasisVector1\t<span class="fl">$x_dim</span>\t0.0\t0.0"
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellBasisVector2\t0.0\t<span class="fl">$y_dim</span>\t0.0"
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellBasisVector3\t0.0\t0.0\t<span class="fl">$z_dim</span>"
+<span class="kw">set</span> x_center [lindex <span class="fl">$box_center</span> 0]
+<span class="kw">set</span> y_center [lindex <span class="fl">$box_center</span> 1]
+<span class="kw">set</span> z_center [lindex <span class="fl">$box_center</span> 2]
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellOrigin\t<span class="fl">$x_center</span>\t<span class="fl">$y_center</span>\t<span class="fl">$z_center</span>"
+
+  
+<span class="kw2">close</span> <span class="fl">$file
+</code></pre> 

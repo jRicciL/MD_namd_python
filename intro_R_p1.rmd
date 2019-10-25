@@ -1,0 +1,37 @@
+---
+title: "Introducción a la Dinámica Molecular con *namd*"
+customjs:
+ - http://3Dmol.csb.pitt.edu/build/3Dmol-min.js
+---
+***
+# Obtención y preparación del sistema
+
+## Introducción al caso de estudio
+
+En este tutorial presentamos un ejercicio de Dinámica Molecular basado en el trabajo de Simmerling, *et al.* (2002), titulado *All Atom Structure Prediction and Folding Simulations of a Stable Protein*, y en el **Tutorial B3** del software **AMBER**, donde el trabajo de Simmerling es presentado como un caso de estudio. Por lo tanto, lo que aquí se presenta es una reproducción de dicho tutorial pero utilizando el software __*namd*__. Esto implica que los métodos aquí usados difieren del Tutorial original y, en su lugar, se fundamentan en el manual de __*namd*__.
+
+Por lo tanto, este documento está basado en los siguientes tutoriales:
+
+- [**TUTORIAL B3 AMBER**: *All Atom Structure Prediction and Folding Simulations of a Stable Protein*](http://ambermd.org/tutorials/basic/tutorial3/). Por **Ross Walker**.
+- [**NAMD User's Guide**. v 2.13](https://www.ks.uiuc.edu/Research/namd/2.13/ug/). Por __Bernardi, *et al.*, 2018__.
+- **Simmerling, C.**, Strockbine, B., Roitberg, A.E., **J. Am. Chem. Soc.**, 2002, 124, 11258-11259. (http://dx.doi.org/10.1021/ja0273851)
+
+### Proteína *Trpcage*
+
+<div style="height: 400px; width: 100%; position: relative;" class='viewer_3Dmoljs justify-content-center border' data-pdb='1L2Y' 
+data-backgroundcolor='0xffffff' 
+data-style1='cartoon:color=spectrum' 
+data-surface1='opacity:.5;color:white'>
+</div> 
+
+<blockquote class="blockquote">
+  <p class="mb-0">This paper describes the simulation of peptide folding using an all atom classical simulation and a slightly modified version of the AMBER FF99 force field. "Trpcage" is a 20 residue amino acid sequence that has been optimised by the Andersen group at the University of Washington. It is currently the smallest protein to display two state folding properties and is stable at room temperature. The small size of this protein makes it an ideal candidate for computational folding simulations. When the original folding simulations were done the experimental structure had not been solved and so the prediction was made without reference to experiment. When the experimental structure was solved the predicted structure was within 1.4 angstroms RMSD. This is exceptionally good for a simulation started from a straight chain linear sequence with no restraints.</p>
+  <footer class="blockquote-footer">Tomado de  <cite title="Source Title">TUTORIAL B3 AMBER: Ross Walker</cite></footer>
+</blockquote>
+
+
+<p class="lead">
+  <a class="btn btn-primary btn-lg btn-block" href="./intro_R_p1.html" role="button">Comenzar</a>
+</p>
+
+

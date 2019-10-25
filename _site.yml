@@ -1,0 +1,39 @@
+name: "Curso_DM_namd"
+output_dir: "docs"
+
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead[CO,CE]{This is fancy header}
+- \fancyfoot[CO,CE]{And this is a fancy footer}
+- \fancyfoot[LE,RO]{\thepage}
+navbar:
+  title: "Curso de DM"
+  left:
+  - text: "Inicio"
+    href: index.html
+  - text: "Introducción"
+    href: intro_R_p1.html
+  - text: "Dinámica Molecular"
+    menu:
+      - text: "Preparación del Sistema"
+        href: prep_sistema.html
+      - text: "Archivos de Configuración"
+        href: parametros_dm.html
+  - text: "Análisis de Trayectorias"
+    menu:
+      - text: "RMSD y RMSF"
+        href: analisis_traj.html
+output:
+  html_document:
+    toc: false
+    toc_float: true
+    toc_collapsed: true
+    css: "styles.css"
+    theme: journal
+    highlight: zenburn
+    code_download: false
+    number_sections: true
+    include:
+      after_body: footer.html
+  

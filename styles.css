@@ -1,0 +1,127 @@
+
+.container-fluid {
+  padding: 0px 10%;
+}
+
+p.mb-0 {
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+code.inline-code {
+  color: #fff;
+  background-color: #303030;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+code span.kw2 {
+  color: #46e7b1;
+}
+
+  
+code span.op {
+  color: #f56d6d;
+}
+
+code span.st {
+    color: #f5dd7e;
+}
+
+code span.ot {
+    color: #be8fef;
+}
+
+code span.kw {
+  color: #f77979;
+}
+
+code span.im {
+  color: #f77979;
+}
+
+code span.dv {
+  color: #76ffd5;
+}
+
+code span.fl {
+  color: #ECC785;
+}
+
+p code, li code {
+  color: #333;
+  background-color: #efe5ca;
+  font-size: 0.8em;
+}
+
+div h1.title {
+    font-size: 42px;
+    color: #EB6864;
+}
+
+.header-section-number::after {
+  content: "-";
+}
+
+.section h1 {
+  padding: 80px 0px 30px;
+  margin-top: 0px;
+}
+
+.section h2 {
+    padding: 80px 0px 20px;
+    margin-top: -66px;
+}
+
+h3 {
+    padding: 80px 0px 20px;
+    margin-top: -66px;
+}
+
+ul .tocify ul, .tocify li {
+    line-height: 20px;
+    background-color: #EFEFEF;
+    color: #333;
+}
+
+div.main-container {
+    max-width: 1450px;
+}
+
+p, li { 
+  color: #555;
+  font-size: 1.2em;
+}
+
+ul, li {
+  font-size: 18px;
+}
+
+.spoiler {
+  visibility: hidden;
+}
+
+.spoiler::before {
+  visibility: visible;
+  color: #EB6864;
+  font-weight: bold;
+  content: "Spoiler!"
+}
+
+.spoiler:hover {
+  visibility: visible;
+}
+
+.spoiler:hover::before {
+  display: none;
+}
+
+.img-responsive {
+    width: auto;
+    height: 120px;
+    padding: 15px;
+    margin: auto;
+    max-height: 90px;
+    max-width: 250px;
+}

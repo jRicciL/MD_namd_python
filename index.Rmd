@@ -1,0 +1,54 @@
+---
+output:
+  html_document:
+    toc: false
+    toc_float: false
+    toc_collapsed: false
+    css: "styles.css"
+    theme: journal
+    highlight: zenburn
+    code_download: false
+    number_sections: true
+---
+
+<div class="container">
+<div class="jumbotron">
+  <h1 class="display-4 text-center pb-3">Introducción a la Dinámica Molecular</h1>
+  <br><br>
+  <p class="lead text-center">
+    Curso de <strong>"Introducción a la Dinámica Molecular"</strong> con <i>namd2</i> y <i>python</i>.
+  </p>
+  <br>
+  <div class="container-fluid p-3">
+  <div class="row">
+  <div class="col-xm-12 col-sm-12 text-center"><img src="http://aguilalab.com/wp-content/uploads/2018/06/aguila_logo.svg" class="img-responsive mx-auto d-block" alt="ÁguilaLab"></div>
+  </div>
+  </div>
+  
+  <hr class="my-5">
+  <p><strong>Instructores:</strong></p>
+  <ul class="list-group list-group-flush">
+  <li class="list-group-item col-sm-12 col-md-4">Dr. Segio Águila</li>
+  <li class="list-group-item col-sm-12 col-md-4">Dr. Abraham Vidal</li>
+  <li class="list-group-item col-sm-12 col-md-4">Víctor Vargas</li>
+  <li class="list-group-item col-sm-12 col-md-4">Joel Ricci</li>
+  </ul>
+  
+  <br>
+  <hr class="my-4">
+  <br>
+  <div class="container py-5">
+  <div class="alert alert-dismissible alert-warning py-5">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4 class="alert-heading text-center">¡Atención!</h4>
+  <p class="mb-0 text-center small">Utiliza el menú superior y los botones de navegación para dirigirte hacia la sección deseada.</p>
+</div>
+  </div>
+  
+  <p class="lead">
+    <a class="btn btn-primary btn-lg btn-block" href="./intro_R_p1.html" role="button">Comenzar</a>
+  </p>
+
+  
+</div>
+</div>
