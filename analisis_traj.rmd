@@ -58,7 +58,7 @@ lineal_strc_view
   <script>
     document.addEventListener("DOMContentLoaded", function () {
        var stage = new NGL.Stage( "viewport");
-       stage.loadFile("dm_sources_1L2Y/1-topologia/tc5b.pdb").then(function (o) {
+       stage.loadFile("https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/tc5b.pdb").then(function (o) {
        o.addRepresentation("cartoon");
        o.autoView();
       });
