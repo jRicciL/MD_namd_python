@@ -429,10 +429,7 @@ Observa que la función <code>pyt.load()</code> recibe los parámetros <code>fil
 <script>
     document.addEventListener("DOMContentLoaded", function () {
        var stage = new NGL.Stage( "viewport");
-       stage.loadFile("https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/tc5b.pdb").then(function (o) {
-       o.addRepresentation("cartoon");
-       o.autoView();
-      });
+       stage.loadFile("rcsb://1crn", {defaultRepresentation: true});
     });
   </script>
 <div id="viewport" class="container text-center" style="width:400px; height:300px;">
