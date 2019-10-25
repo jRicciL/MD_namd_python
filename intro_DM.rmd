@@ -1,7 +1,7 @@
 ---
 title: "Introducción a la Dinámica Molecular con *namd*"
 customjs:
- - http://3Dmol.csb.pitt.edu/build/3Dmol-min.js
+ - https://3Dmol.csb.pitt.edu/build/3Dmol-min.js
 ---
 ***
 # Obtención y preparación del sistema
