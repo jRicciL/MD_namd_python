@@ -66,7 +66,7 @@ lineal_strc_view
             })
             var sele = "not backbone or .CA or (PRO and .N)"
             o.addRepresentation("licorice")
-            o.addRepresentation("cartoon")
+            o.addRepresentation("cartoon", { color: "residueindex", aspectRatio: 4, scale: 0.5 })
             var traj = o.trajList[0].trajectory;
             var player = new NGL.TrajectoryPlayer( traj, { } );
             traj.setPlayer( player );
