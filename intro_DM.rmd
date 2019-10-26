@@ -4,9 +4,7 @@ customjs:
  - https://3Dmol.csb.pitt.edu/build/3Dmol-min.js
 ---
 ***
-# Obtención y preparación del sistema
-
-## Introducción al caso de estudio
+# Introducción al caso de estudio
 
 En este tutorial presentamos un ejercicio de Dinámica Molecular basado en el trabajo de Simmerling, *et al.* (2002), titulado *All Atom Structure Prediction and Folding Simulations of a Stable Protein*, y en el **Tutorial B3** del software **AMBER**, donde el trabajo de Simmerling es presentado como un caso de estudio. Por lo tanto, lo que aquí se presenta es una reproducción de dicho tutorial pero utilizando el software __*namd*__. Esto implica que los métodos aquí usados difieren del Tutorial original y, en su lugar, se fundamentan en el manual de __*namd*__.
 
@@ -16,7 +14,7 @@ Por lo tanto, este documento está basado en los siguientes tutoriales:
 - [**NAMD User's Guide**. v 2.13](https://www.ks.uiuc.edu/Research/namd/2.13/ug/). Por __Bernardi, *et al.*, 2018__.
 - **Simmerling, C.**, Strockbine, B., Roitberg, A.E., **J. Am. Chem. Soc.**, 2002, 124, 11258-11259. (http://dx.doi.org/10.1021/ja0273851)
 
-### Proteína *Trpcage*
+## Proteína *Trpcage*
 
 <div style="height: 400px; width: 100%; position: relative;" class='viewer_3Dmoljs justify-content-center border' data-pdb='1L2Y' 
 data-backgroundcolor='0xffffff' 
@@ -31,7 +29,7 @@ data-surface1='opacity:.5;color:white'>
 
 
 <p class="lead">
-  <a class="btn btn-primary btn-lg btn-block" href="./intro_R_p1.html" role="button">Comenzar</a>
+  <a class="btn btn-primary btn-lg btn-block" href="./prep_sistema.html" role="button">Comenzar</a>
 </p>
 
 

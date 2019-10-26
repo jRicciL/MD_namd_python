@@ -57,11 +57,22 @@ lineal_strc_view
 <script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-       var stage = new NGL.Stage( "viewport");
-       stage.loadFile("rcsb://1crn", {defaultRepresentation: true});
+       var stage = new NGL.Stage( "viewport", {backgroundColor:'white'}  );
+       stage.loadFile("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.psf").then(function (o) {
+          NGL.autoLoad("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_SA.dcd").then(function (frames) {
+            o.addTrajectory(frames, {
+              initialFrame: 0,
+              superpose: false
+            })
+            var sele = "not backbone or .CA or (PRO and .N)"
+            o.addRepresentation("licorice")
+            o.addRepresentation("cartoon", { color: "residueindex" })
+            stage.autoView()
+        })
+      })
     });
   </script>
-<div id="viewport" style="width:400px; height:300px;" class='container text-center'></div>
+<div id="viewport" style="height: 300px; width: 100%; position: relative;" class='justify-content-center'></div>
 </div>
 
 ## Carga de la trayectoria
