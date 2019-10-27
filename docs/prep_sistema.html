@@ -397,6 +397,8 @@ $(document).ready(function () {
 
 <div id="preparación-del-sistema" class="section level1">
 <h1><span class="header-section-number">1</span> Preparación del sistema</h1>
+<p>Vamos a comenzar a preparar el sistema de la proteína <strong>tc5b</strong> partiendo del archivo <code>TC5b_input.pdb</code>, el cual puedes descargar desde el <a href="https://github.com/jRicciL/MD_namd_python/tree/master/dm_sources_1L2Y">repositorio de github</a>, en la carpeta <code>1-topologia</code>.</p>
+<p>Como primer paso debemos generar un archivo de coordenadas (<code>.pdb</code>) y un archivo de topología (<code>.psf</code>) a partir del archivo <code>TC5b_input.pdb</code>. La idea es que los nuevos archivos sigan la nomenclatura y las especificaciones del campo de fuerza <em>CHARMM</em>, que usaremos para llevar a cabo la simulación.Para lograrlo usaremos el archivo <a href="https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/gen_psf.tcl"><code>gen_psf.tcl</code></a> que contiene la siguiente información para comenzar a construir el sistema.</p>
 <div class="sourceCode" id="numCode"><pre class="sourceCode numberSource R numberLines"><code class="sourceCode r"><a class="sourceLine" id="numCode-1" data-line-number="1">package require psfgen</a>
 <a class="sourceLine" id="numCode-2" data-line-number="2">topology ..<span class="op">/</span><span class="dv">0</span><span class="op">-</span>inputs<span class="op">/</span>top_all27_prot_lipid.inp</a>
 <a class="sourceLine" id="numCode-3" data-line-number="3">pdbalias residue HIS HSE</a>
@@ -468,12 +470,14 @@ Si has clonado o descargado el repositorio de Github encontrarás en él el un p
 <p>Dicho comando obtiene la carga de todos los átomos del sistema (<code>[atomselect top] get charge</code>) y procede a sumar dichos valores (<code>eval vecadd ...</code>).</p>
 <p>Ahora procedemos a neutralizar el sistema:</p>
 <pre class="sourceCode"><code class="inline-code"><span class="kw2">autoionize</span> -psf <span class="fl">${molname}</span>_temp.psf -pdb <span class="fl">${molname}</span>_temp.pdb -neutralize -o <span class="fl"><span class="sm">${molname}</span>_wb</span></code></pre>
-<p>El comando <code>autoionize</code> toma como entrada los archivos <code>_temp.psf</code> y <code>_temp.pdb</code> que creamos en el paso anterior, y la bandera <code>-neutralize</code> se encarga de añadir iones de Cloro o Sodio según la carga del sistema. <strong>¿Qué iones y cuántos se agregaron al sistema?</strong> Finalmente, dos nuevos archivos <code>tc5b_wb.psf</code> y <code>tc5b_wb.pdb</code> son creados en el directorio.<br />
+<p>El comando <code>autoionize</code> toma como entrada los archivos <code>_temp.psf</code> y <code>_temp.pdb</code> que creamos en el paso anterior, y la bandera <code>-neutralize</code> se encarga de añadir iones de Cloro o Sodio según la carga del sistema.<br />
+<strong>¿Qué iones y cuántos se agregaron al sistema?</strong><br />
+Finalmente, dos nuevos archivos <code>tc5b_wb.psf</code> y <code>tc5b_wb.pdb</code> son creados en el directorio.<br />
 Además la ventana <code>main</code> del <strong>VMD</strong> mostrará dos sistemas, el <code>_temp</code> y el <code>_wb</code>, este último es el que nos interesa y seguiremos trabajando con él en el siguiente apartado. mientras tanto, para avitar confusiones puedes borrar de la sesión de <strong>VMD</strong> todos los sistemas cargados ejecuatando: <code class="inline-code"><span class="kw2">mol</span> delete top</code>.</p>
 </div>
 <div id="cálculo-de-las-medidas-de-la-caja-de-agua" class="section level2">
 <h2><span class="header-section-number">1.3</span> Cálculo de las medidas de la caja de agua</h2>
-<p>Para obtener las medidas de la caja de agua</p>
+<p>Para obtener las medidas de la caja de agua vamos a utilizar la siguiente serie de comandos, los cuales podemos encontrar en el archivo <a href="https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/2-solvatar_wt/solvate_wat_box.tcl"><code>solvate_wat_box.tcl</code></a>. Para entender qué es lo que hace este pequeño script, puedes revisar los comentarios que lo acompañan, aunque en términos generales lo que hará es abrir los archivos <code>tc5b_wb.psf/pdb</code> y calcular el tamaño y centro de la caja de agua para depués guardar dichos datos en un archivo llamado <code>box_dims.txt</code>.</p>
 <pre class="sourceCode"><code class="inline-code">
 <span class="co"># En caso de haber cerrado la seción del VMD, volvemos a crear la varaible molname.</span>
 <span class="kw">set</span> molname "tc5b"
@@ -502,11 +506,13 @@ set file [open box_dims.txt w]
 <span class="kw">set</span> x_center [lindex <span class="fl">$box_center</span> 0]
 <span class="kw">set</span> y_center [lindex <span class="fl">$box_center</span> 1]
 <span class="kw">set</span> z_center [lindex <span class="fl">$box_center</span> 2]
-<span class="kw2">puts</span> <span class="fl">$file</span> "cellOrigin\t<span class="fl">$x_center</span>\t<span class="fl">$y_center</span>\t<span class="fl">$z_center</span>"
-
-  
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellOrigin\t<span class="fl">$x_center</span>\t<span class="fl">$y_center </span>\t <span class="fl">$z_center</span>
 <span class="kw2">close</span> <span class="fl">$file
 </code></pre>
+<p>Vamos a ejecutar dicho archivo con el siguiente comando:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">vmd</span> -dispdev text -e solvate_wat_box.tcl</a></code></pre></div>
+<p>No olvides que debes ejecutarlo desde el directorio con los archivos <code>tc5b_wb.psf/pdb</code>.</p>
+<p>Como resultado, el archivo <code>box_dims.txt</code> habrá sido creado y su contenido lo usaremos en la siguiente sección.</p>
 </div>
 </div>
 

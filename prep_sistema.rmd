@@ -6,6 +6,10 @@ customjs:
 
 # Preparación del sistema
 
+Vamos a comenzar a preparar el sistema de la proteína **tc5b** partiendo del archivo `TC5b_input.pdb`, el cual puedes descargar desde el [repositorio de github](https://github.com/jRicciL/MD_namd_python/tree/master/dm_sources_1L2Y), en la carpeta `1-topologia`.  
+
+Como primer paso debemos generar un archivo de coordenadas (`.pdb`) y un archivo de topología (`.psf`) a partir del archivo `TC5b_input.pdb`. La idea es que los nuevos archivos sigan la nomenclatura y las especificaciones del campo de fuerza *CHARMM*, que usaremos para llevar a cabo la simulación.Para lograrlo usaremos el archivo [`gen_psf.tcl`](https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/gen_psf.tcl) que contiene la siguiente información para comenzar a construir el sistema.
+
 ```{#numCode .R .numberLines}
 package require psfgen
 topology ../0-inputs/top_all27_prot_lipid.inp
@@ -95,12 +99,14 @@ Ahora procedemos a neutralizar el sistema:
 <pre class="sourceCode"><code class="inline-code"><span class="kw2">autoionize</span> -psf <span class="fl">${molname}</span>_temp.psf -pdb <span class="fl">${molname}</span>_temp.pdb -neutralize -o <span class="fl"><span class="sm">${molname}</span>_wb</span></code></pre>
 
 
-El comando `autoionize` toma como entrada los archivos `_temp.psf` y `_temp.pdb` que creamos en el paso anterior, y la bandera `-neutralize` se encarga de añadir iones de Cloro o Sodio según la carga del sistema. **¿Qué iones y cuántos se agregaron al sistema?** Finalmente, dos nuevos archivos `tc5b_wb.psf` y `tc5b_wb.pdb` son creados en el directorio.  
+El comando `autoionize` toma como entrada los archivos `_temp.psf` y `_temp.pdb` que creamos en el paso anterior, y la bandera `-neutralize` se encarga de añadir iones de Cloro o Sodio según la carga del sistema.   
+**¿Qué iones y cuántos se agregaron al sistema?**  
+Finalmente, dos nuevos archivos `tc5b_wb.psf` y `tc5b_wb.pdb` son creados en el directorio.  
 Además la ventana `main` del **VMD** mostrará dos sistemas, el `_temp` y el `_wb`, este  último es el que nos interesa y seguiremos trabajando con él en el siguiente apartado. mientras tanto, para avitar confusiones puedes borrar de la sesión de **VMD** todos los sistemas cargados ejecuatando: <code class="inline-code"><span class="kw2">mol</span> delete top</code>.
 
 ## Cálculo de las medidas de la caja de agua
 
-Para obtener las medidas de la caja de agua 
+Para obtener las medidas de la caja de agua vamos a utilizar la siguiente serie de comandos, los cuales podemos encontrar en el archivo [`solvate_wat_box.tcl`](https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/2-solvatar_wt/solvate_wat_box.tcl). Para entender qué es lo que hace este pequeño script, puedes revisar los comentarios que lo acompañan, aunque en términos generales lo que hará es abrir los archivos `tc5b_wb.psf/pdb` y calcular el tamaño y centro de la caja de agua para depués guardar dichos datos en un archivo llamado `box_dims.txt`.
 
 <pre class="sourceCode"><code class="inline-code">
 <span class="co"># En caso de haber cerrado la seción del VMD, volvemos a crear la varaible molname.</span>
@@ -130,8 +136,17 @@ set file [open box_dims.txt w]
 <span class="kw">set</span> x_center [lindex <span class="fl">$box_center</span> 0]
 <span class="kw">set</span> y_center [lindex <span class="fl">$box_center</span> 1]
 <span class="kw">set</span> z_center [lindex <span class="fl">$box_center</span> 2]
-<span class="kw2">puts</span> <span class="fl">$file</span> "cellOrigin\t<span class="fl">$x_center</span>\t<span class="fl">$y_center</span>\t<span class="fl">$z_center</span>"
-
-  
+<span class="kw2">puts</span> <span class="fl">$file</span> "cellOrigin\t<span class="fl">$x_center</span>\t<span class="fl">$y_center </span>\t <span class="fl">$z_center</span>
 <span class="kw2">close</span> <span class="fl">$file
 </code></pre> 
+
+Vamos a ejecutar dicho archivo con el siguiente comando:
+
+```{bash eval=FALSE}
+vmd -dispdev text -e solvate_wat_box.tcl
+```
+
+No olvides que debes ejecutarlo desde el directorio con los archivos `tc5b_wb.psf/pdb`.
+
+Como resultado, el archivo `box_dims.txt` habrá sido creado y su contenido lo usaremos en la siguiente sección.
+  
