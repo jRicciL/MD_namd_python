@@ -14,7 +14,7 @@ output:
 
 <div class="container">
 <div class="jumbotron">
-  <h1 class="display-4 text-center pb-3">Introducción a la Dinámica Molecular</h1>
+  <h1 class="display-4 text-center pb-3">Curso de Dinámica Molecular</h1>
   <br>
   <div style="height: 200px; width: 100%; position: relative;" class='viewer_3Dmoljs justify-content-center border' data-pdb='1L2Y' 
 data-backgroundcolor='0xeeeeee' 
@@ -53,7 +53,7 @@ data-surface1='opacity:.5;color:white'>
   </div>
   
   <p class="lead">
-    <a class="btn btn-primary btn-lg btn-block" href="./intro_R_p1.html" role="button">Comenzar</a>
+    <a class="btn btn-primary btn-lg btn-block" href="./intro_DM.html" role="button">Comenzar</a>
   </p>
 
   
