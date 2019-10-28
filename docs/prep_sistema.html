@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 
 
@@ -322,6 +325,63 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -329,6 +389,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -396,7 +466,7 @@ $(document).ready(function () {
 
 
 <div id="preparación-del-sistema" class="section level1">
-<h1><span class="header-section-number">1</span> Preparación del sistema</h1>
+<h1>Preparación del sistema</h1>
 <p>Vamos a comenzar a preparar el sistema de la proteína <strong>tc5b</strong> partiendo del archivo <code>TC5b_input.pdb</code>, el cual puedes descargar desde el <a href="https://github.com/jRicciL/MD_namd_python/tree/master/dm_sources_1L2Y">repositorio de github</a>, en la carpeta <code>1-topologia</code>.</p>
 <p>Como primer paso debemos generar un archivo de coordenadas (<code>.pdb</code>) y un archivo de topología (<code>.psf</code>) a partir del archivo <code>TC5b_input.pdb</code>. La idea es que los nuevos archivos sigan la nomenclatura y las especificaciones del campo de fuerza <em>CHARMM</em>, que usaremos para llevar a cabo la simulación.Para lograrlo usaremos el archivo <a href="https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/gen_psf.tcl"><code>gen_psf.tcl</code></a> que contiene la siguiente información para comenzar a construir el sistema.</p>
 <div class="sourceCode" id="numCode"><pre class="sourceCode numberSource R numberLines"><code class="sourceCode r"><a class="sourceLine" id="numCode-1" data-line-number="1">package require psfgen</a>
@@ -447,7 +517,7 @@ psfgen) Info: psf file complete.
 <p>Si todo sale bien verás que dos nuevos archivos han sido creados en tu carpeta de trabajo: <code>tc5b.psf</code> y <code>tc5b.pdb</code>.</p>
 <!--Imagen del mapa de flujo con los archivos-->
 <div id="solvatación-de-la-proteína-en-caja-de-agua" class="section level2">
-<h2><span class="header-section-number">1.1</span> Solvatación de la proteína en caja de agua</h2>
+<h2>Solvatación de la proteína en caja de agua</h2>
 <p>Ahora procederemos a solvatar a la proteína, es decir, ponerla en una caja de agua que permita aproximar al sistema a un ambiente fisiolǵico.<br />
 Si has clonado o descargado el repositorio de Github encontrarás en él el un pequeño <em>script</em> llamado <code>solvate_wat_box.tcl</code> el cual puedes usar directamente para solvatar tu sistema siempre y cuando existan los archivos de entrada necesarios. Sin embargo, en este tutorial iremos paso a paso trabajando con los comandos del archivo <code>solvate_wat_box.tcl</code>, pero directamente desde la consola <strong><em>Tk/Tcl</em></strong> de <strong>VMD</strong>.</p>
 <ol style="list-style-type: decimal">
@@ -461,7 +531,7 @@ Si has clonado o descargado el repositorio de Github encontrarás en él el un p
 </ol>
 </div>
 <div id="neutralización-del-sistema" class="section level2">
-<h2><span class="header-section-number">1.2</span> Neutralización del sistema</h2>
+<h2>Neutralización del sistema</h2>
 <p>A continuación vamos a proceder a neutralizar el sistema para obtener una carga neta de 0, para ello agregaremos iones de Cloro o Sodio según se requiera. Por lo tanto, no está de más saber qué carga tiene nuestro sistema antes de neutralizarlo. Para ello, ejecutalo siguiente:</p>
 <pre class="sourceCode"><code class="inline-code"><span class="kw">eval</span> "vecadd [[atomselect top all] get charge]"</code>
 </code></pre>
@@ -476,7 +546,7 @@ Finalmente, dos nuevos archivos <code>tc5b_wb.psf</code> y <code>tc5b_wb.pdb</co
 Además la ventana <code>main</code> del <strong>VMD</strong> mostrará dos sistemas, el <code>_temp</code> y el <code>_wb</code>, este último es el que nos interesa y seguiremos trabajando con él en el siguiente apartado. mientras tanto, para avitar confusiones puedes borrar de la sesión de <strong>VMD</strong> todos los sistemas cargados ejecuatando: <code class="inline-code"><span class="kw2">mol</span> delete top</code>.</p>
 </div>
 <div id="cálculo-de-las-medidas-de-la-caja-de-agua" class="section level2">
-<h2><span class="header-section-number">1.3</span> Cálculo de las medidas de la caja de agua</h2>
+<h2>Cálculo de las medidas de la caja de agua</h2>
 <p>Para obtener las medidas de la caja de agua vamos a utilizar la siguiente serie de comandos, los cuales podemos encontrar en el archivo <a href="https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/2-solvatar_wt/solvate_wat_box.tcl"><code>solvate_wat_box.tcl</code></a>. Para entender qué es lo que hace este pequeño script, puedes revisar los comentarios que lo acompañan, aunque en términos generales lo que hará es abrir los archivos <code>tc5b_wb.psf/pdb</code> y calcular el tamaño y centro de la caja de agua para depués guardar dichos datos en un archivo llamado <code>box_dims.txt</code>.</p>
 <pre class="sourceCode"><code class="inline-code">
 <span class="co"># En caso de haber cerrado la seción del VMD, volvemos a crear la varaible molname.</span>
@@ -535,6 +605,8 @@ set file [open box_dims.txt w]
 <!-- Footer -->
 
 
+</div>
+</div>
 
 </div>
 
@@ -567,6 +639,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

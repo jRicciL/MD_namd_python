@@ -1,11 +1,10 @@
 ---
 title: "Análisis de Trayectorias"
 author: "Joel Ricci López"
-date: "16/10/2019"
 output: html_document
 ---
 
-# Análisis de trayectorias con *pytraj*
+# Manejo de trayectorias con *pytraj*
 
 ```{r echo=FALSE, include = FALSE}
 library(reticulate)
@@ -49,35 +48,15 @@ Recordemos que podemos utilizar la librería *nglview* para visualizar la estruc
 import nglview as nv
 import warnings
 lineal_strc_view = nv.show_pytraj(lineal_strc)
-lineal_strc_view.background = 'black'
+lineal_strc_view.background = '#303030'
 lineal_strc_view
 ```
 
-<div class='container text-center'>
-<script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-       var stage = new NGL.Stage( "viewport", {backgroundColor:'white'}  );
-       stage.loadFile("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.psf").then(function (o) {
-          NGL.autoLoad("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_SA.dcd").then(function (frames) {
-            o.addTrajectory(frames, {
-              initialFrame: 0,
-              superpose: false
-            })
-            var sele = "not backbone or .CA or (PRO and .N)"
-            o.addRepresentation("licorice")
-            o.addRepresentation("cartoon", { color: "residueindex", aspectRatio: 4, scale: 0.5 })
-            var traj = o.trajList[0].trajectory;
-            var player = new NGL.TrajectoryPlayer( traj, { } );
-            traj.setPlayer( player );
-            traj.player.play();
-            stage.autoView();
-        })
-      })
-    });
-  </script>
-<div id="viewport" style="height: 300px; width: 100%; position: relative;" class='justify-content-center'></div>
-</div>
+<div style="height: 400px; width: 100%; position: relative;" class='viewer_3Dmoljs justify-content-center border' data-href='https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.pdb' 
+data-backgroundcolor='0x303030' 
+data-style1='cartoon:color=spectrum' 
+data-surface1='opacity:.5;color:white'>
+</div> 
 
 ## Carga de la trayectoria
 Ahora, vamos a proceder a cargar en memoria los archivos de trayectoria `dcd` de todas las fases de la dinámica. Para ello, es necesario primero definir el archivo de topología que utilizaremos.
@@ -146,10 +125,6 @@ print( F'Calentamiento: {heat_traj.n_frames} frames')
 # Equilibrado
 eq_traj = pyt.load(filename = f_eq, top = top_prot_psf)
 print( F'Equilibrado: {eq_traj.n_frames} frames')
-```
-
-
-```{python}
 # Producción
 prod_traj = pyt.load(filename = f_prod, top = top_prot_psf)
 print(F'Producción: {prod_traj.n_frames} frames')
@@ -200,19 +175,8 @@ for traj in trajs_list:
 full_traj
 ```
 
-### Guardando el archivo de tryectoria
-Como vimos en el jemplo de la tayectoria de la minimización, podemos usar la función `write_traj()`. Observa qué parámetros se requieren para guardar el nuevo archivo.
-
-```{python eval=FALSE}
-# Podemos guardar el archivo para trabajar con él en un posterior análisis
-name_file_full_traj = F'{dir_traj}/tc5b_PROT_FULL_TRAJ.dcd'
-pyt.write_traj(filename = name_file_full_traj, 
-               traj = full_traj, overwrite = True)
-```
-
-
 ### Superposición de las estructuras
-Bien, ahora podemos comenzar con el análisis de la trayectoria. Si bien, en general debemos enfocarnos en la fase de producción, para este ejemplo comenzaremos observando la evolución conformacional de la proteína a través de todas las fases de la trayectoria.  
+  
 Primero vamos a superponer todas las conformaciones de la proteína. Para ello, el método superpose realiza moviemientos translacionales y rotacionales de forma iterativa minimizando el RMSD entre todas las confromaciones.
 Observa que el alineamiento lo realizaremos considerando los carbonos alfa únicamente de los residuos 4 a 17, es decir, hemos omitido los primeros y los últimos tres reiduos de la proteína. Si lo deseas puedes reducir o extender esta selección.
 
@@ -222,135 +186,48 @@ full_traj.superpose(mask = ':4-17@CA', ref = 0)
 # Por default el primer frame es tomado como referencia
 ```
 
+### Guardando el archivo de tryectoria
+Como vimos en el ejemplo de la tayectoria de la minimización, podemos usar la función `write_traj()`. Observa qué parámetros se requieren para guardar el nuevo archivo.
+
+```{python eval=FALSE}
+# Podemos guardar el archivo para trabajar con él en un posterior análisis
+name_file_full_traj = F'{dir_traj}/tc5b_PROT_FULL_TRAJ.dcd'
+pyt.write_traj(filename = name_file_full_traj, 
+               traj = full_traj, overwrite = True)
+```
+
+
 ### Visualización de la trayectoria
-Podemos usar nglview para visualizar la tryectoria con los frames superpuestos.
+Podemos usar *nglview* para visualizar la tryectoria con los frames superpuestos.
 ```{python  eval=FALSE}
 full_traj_sup_view = nv.show_pytraj(full_traj)
 full_traj_sup_view.add_representation("licorice")
 full_traj_sup_view
 ```
 
-# RMSD y RMSF
+<div class='container text-center'>
+<script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+       var stage = new NGL.Stage( "viewport", {backgroundColor:'white'}  );
+       stage.loadFile("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.psf").then(function (o) {
+          NGL.autoLoad("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_SA.dcd").then(function (frames) {
+            o.addTrajectory(frames, {
+              initialFrame: 0,
+              superpose: false
+            })
+            var sele = "not backbone or .CA or (PRO and .N)"
+            o.addRepresentation("licorice")
+            o.addRepresentation("cartoon", { color: "residueindex", aspectRatio: 4, scale: 0.5 })
+            var traj = o.trajList[0].trajectory;
+            var player = new NGL.TrajectoryPlayer( traj, { } );
+            traj.setPlayer( player );
+            traj.player.play();
+            stage.autoView();
+        })
+      })
+    });
+  </script>
+<div id="viewport" style="height: 300px; width: 100%; position: relative;" class='justify-content-center'></div>
+</div>
 
-## Cálculo del RMSD
-
-Ahora procederemos a calcular el rmsd de todos los frames de la trayectoria con respecto a una estructura de referencia.  
-Como primer ejemplo usaremos la estructura lineal usando el parámetro ref.
-
-```{python}
-# Cálculo del RMSD de la trayectoria total
-# tomando como referencia la estructura inicial (lineal)
-rmsd_full_REF_lineal = pyt.rmsd(traj = full_traj, 
-                                mask = ':4-17,@CA', 
-                                ref = init_struc)
-```
-
-### Grafica de RMSD
-Para graficar el RMSD importamos las librerías matplotlib y seaborn y establecemos algunos parámetros por default para las gráficas.
-
-```{python }
-# Importamos las librerías y parámetros para generar las gráficas
-from  matplotlib import pyplot as plt
-import seaborn as sns
-import pylab
-sns.set( context = 'talk', style = 'ticks', palette = "Spectral")
-pylab.rcParams['figure.figsize'] = (15, 5)
-```
-
-Ahora generamos la gráfica de la trayectoria total:
-
-```{python collapse=TRUE}
-# Creamos la figura del RMSD de la trayectoria total
-plt.scatter( x = range(full_traj.n_frames), 
-             y = rmsd_full_REF_lineal, s = 20, alpha = 0.3 )
-plt.title("RMSD trayectoria TOTAL. Ref = conformación lineal")
-plt.xlabel("# Frame")
-plt.show()
-```
-
-Como es de esperarse, conforme el tiempo de simulación avanza hay un aumento en el RMSD de cada frame con respecto a la  conformación inicial.  
-Ahora bien, para un análisis más interesante usaremos como referencia la estructura por NMR de la proteína, con el objetivo de saber si, a lo largo de la simulación, las estructura de la proteína se aproxima a la estructura experimental.  
-Para ello cargamos la estructura NMR de la proteína.
-
-```{python}
-# Cargamos la estructura NMR
-nmr_strc = pyt.load(filename = 'dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.pdb',
-                  top = 'dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.psf')
-```
-
-Calculamos el RMSD de la trayectoria usando como referencia a nmr_strc. Seguido de ello, generamos la gráfica.
-
-```{python}
-rmsd_full_REF_nmr = pyt.rmsd( traj = full_traj, 
-                                mask = ':4-17,@CA', 
-                                ref = nmr_strc)
-```
-
-```{python}
-plt.scatter( x = range(full_traj.n_frames), y = rmsd_full_REF_nmr, 
-             s = 20, alpha = 0.3, c='orange' )
-plt.title("RMSD trayectoria TOTAL. Ref = conformación NMR 1l2y")
-plt.xlabel("# Frame")
-plt.show()
-```
-
-Como ves, al principio de la simulación la conformación inicial y la estructura por NMR son muy distintas (entre 6 a 8 A), sin embargo, a lo largo de la dinámica y sobre todo en la producción, la conformación de la porteína tiende a ser más parecida a la estructura NMR.
-
-Finalmente, visualicemos únicamente la fase de producción con ambas referencias:
-
-```{python}
-import pandas as pd
-# Creamos una tabla con pandas
-# Dado que la producción corresponde a los últimos 5000 frames,
-# usamos el slicing [-5000:] para extraer esos últimos 5000 datos
-rmsd_prod = pd.DataFrame({"Ref_lineal": rmsd_full_REF_lineal[-5000:], 
-                          "Ref_NMR": rmsd_full_REF_nmr[-5000:]})
-
-# Sólo por variar, vamos a usar seaborn para generar el gráfico:
-ax = sns.lineplot(data = rmsd_prod)
-ax.set_title("RMSD producción")
-```
-
-## Cálculo del RMSF
-Vamos a finalizar este análisis evaluando el RMSF de la proteína a lo largo de la fase de producción. Para ello, primero vamos a superponer toda la trayectoria a un frame promedio.
-
-### Obtención del frame promedio y superposición de la trayectoria
-
-```{python}
-# Obtenemos el frame promedio
-avg_prod_frame = pyt.mean_structure(traj = prod_traj)
-# Y superponemos la trayectoria a dicho frame
-prod_traj.superpose(ref = avg_prod_frame, mask = ':3-18@CA')
-```
-
-Ahora calculamos el RMSF de toda la producción:
-
-```{python}
-rmsf_prod_traj = pyt.rmsf( prod_traj, mask = '@CA' )
-# Graficamos
-plt.plot( rmsf_prod_traj.T[1], c = 'red')
-plt.title("RMSF producción total")
-plt.xlabel("# Residuo")
-plt.show()
-```
-
-PAra terminar esta sección, un análisis interesante sería ver cómo el RMSF de la proteína va cambiando tomando ciertos intervalos de la producción.
-
-```{python}
-# Ahora calculamos el RMSF a diferentes intervalos de la producción
-num_interv = 5
-interv_size = int(prod_traj.n_frames / num_interv)
-df_rmsf = pd.DataFrame(
-        {F'Interv. {i}': pyt.rmsf( prod_traj[i*interv_size : (i+1)*interv_size],
-        mask = '@CA').T[1] for i in range(num_interv)} )
-```
-
-Graficamos usando `seaborn`.
-
-```{python}
-sns.set_palette("husl")
-ax = sns.lineplot(data = df_rmsf, dashes = False)
-ax.set_title("RMSF producción")
-```
-
-En general, podremos observar que hacia la última parte de la trayectoria, el backbone de la proteína tiende a ser más estable. Continuaremos con más análisis de la trayectoria en la siguiente sección.

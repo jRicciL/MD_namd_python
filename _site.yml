@@ -22,8 +22,10 @@ navbar:
         href: parametros_dm.html
   - text: "Análisis de Trayectorias"
     menu:
-      - text: "RMSD y RMSF"
+      - text: "Manejo de trayectorias con pytraj"
         href: analisis_traj.html
+      - text: "RMSD y RMSF"
+        href: rmsd_y_rmsf.html
 output:
   html_document:
     toc: false
@@ -33,7 +35,7 @@ output:
     theme: journal
     highlight: zenburn
     code_download: false
-    number_sections: true
+    number_sections: false
     include:
       after_body: footer.html
   

@@ -375,7 +375,10 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="analisis_traj.html">RMSD y RMSF</a>
+      <a href="analisis_traj.html">Manejo de trayectorias con pytraj</a>
+    </li>
+    <li>
+      <a href="rmsd_y_rmsf.html">RMSD y RMSF</a>
     </li>
   </ul>
 </li>
@@ -393,13 +396,12 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Análisis de Trayectorias</h1>
 <h4 class="author">Joel Ricci López</h4>
-<h4 class="date">16/10/2019</h4>
 
 </div>
 
 
-<div id="análisis-de-trayectorias-con-pytraj" class="section level1">
-<h1><span class="header-section-number">1</span> Análisis de trayectorias con <em>pytraj</em></h1>
+<div id="manejo-de-trayectorias-con-pytraj" class="section level1">
+<h1>Manejo de trayectorias con <em>pytraj</em></h1>
 <p>Como primer paso vamos a cargar los datos de la trayectoria de la DM, considerando cada una de las fases realizadas.<br />
 Para ello, comenzamos importando el módulo <code>pytraj</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">import</span> pytraj <span class="im">as</span> pyt</a></code></pre></div>
@@ -416,44 +418,20 @@ Observa que la función <code>pyt.load()</code> recibe los parámetros <code>fil
 ## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
 ## </code></pre>
 <div id="visualización-de-la-esturctura" class="section level2">
-<h2><span class="header-section-number">1.1</span> Visualización de la esturctura</h2>
+<h2>Visualización de la esturctura</h2>
 <p>Recordemos que podemos utilizar la librería <em>nglview</em> para visualizar la estructura de la proteína:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Importamos nglview</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="im">import</span> nglview <span class="im">as</span> nv</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="im">import</span> warnings</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">lineal_strc_view <span class="op">=</span> nv.show_pytraj(lineal_strc)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">lineal_strc_view.background <span class="op">=</span> <span class="st">&#39;black&#39;</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">lineal_strc_view.background <span class="op">=</span> <span class="st">&#39;#303030&#39;</span></a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">lineal_strc_view</a></code></pre></div>
-<div class="container text-center">
-<script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-       var stage = new NGL.Stage( "viewport", {backgroundColor:'white'}  );
-       stage.loadFile("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.psf").then(function (o) {
-          NGL.autoLoad("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_SA.dcd").then(function (frames) {
-            o.addTrajectory(frames, {
-              initialFrame: 0,
-              superpose: false
-            })
-            var sele = "not backbone or .CA or (PRO and .N)"
-            o.addRepresentation("licorice")
-            o.addRepresentation("cartoon", { color: "residueindex", aspectRatio: 4, scale: 0.5 })
-            var traj = o.trajList[0].trajectory;
-            var player = new NGL.TrajectoryPlayer( traj, { } );
-            traj.setPlayer( player );
-            traj.player.play();
-            stage.autoView();
-        })
-      })
-    });
-  </script>
-<div id="viewport" class="justify-content-center" style="height: 300px; width: 100%; position: relative;">
+<div class="viewer_3Dmoljs justify-content-center border" style="height: 400px; width: 100%; position: relative;" data-href="https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.pdb" data-backgroundcolor="0x303030" data-style1="cartoon:color=spectrum" data-surface1="opacity:.5;color:white">
 
 </div>
 </div>
-</div>
 <div id="carga-de-la-trayectoria" class="section level2">
-<h2><span class="header-section-number">1.2</span> Carga de la trayectoria</h2>
+<h2>Carga de la trayectoria</h2>
 <p>Ahora, vamos a proceder a cargar en memoria los archivos de trayectoria <code>dcd</code> de todas las fases de la dinámica. Para ello, es necesario primero definir el archivo de topología que utilizaremos.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">f_topology <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/4-run_dm_2/tc5b_wb.psf&#39;</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">top_psf <span class="op">=</span> pyt.load_topology(f_topology)</a>
@@ -488,7 +466,7 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos “red
 ## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
 ## </code></pre>
 <div id="archivos-.dcd" class="section level3">
-<h3><span class="header-section-number">1.2.1</span> Archivos <em>.dcd</em></h3>
+<h3>Archivos <em>.dcd</em></h3>
 <p>Ahora ubicamos el directorio y nombre de cada uno de los archivos dcd. Esto incluye también al archivo .pdb con la estructura inicial.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># PDB inicial</span></a>
 <a class="sourceLine" id="cb14-2" data-line-number="2">f_inicial <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/2-solvatar_wt/tc5b_wb.pdb&#39;</span></a>
@@ -529,7 +507,7 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos “red
 </div>
 </div>
 <div id="concatenación-de-las-trayectorias" class="section level2">
-<h2><span class="header-section-number">1.3</span> Concatenación de las trayectorias</h2>
+<h2>Concatenación de las trayectorias</h2>
 <p>Ahora, con el objetivo de ver la evolución conformacional de la proteína a lo largo de todas las fases, vamos a unir todas las trayectorias en una sola. Esto también nos permitirá guardar una única trayectoria para posteriores análisis.<br />
 Primero generamos una lista con los objetos de trayectoria:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># Combinamos todas las etapas para visualizar una única trayectoria</span></a>
@@ -558,128 +536,58 @@ Para ello vamos utilizar una expresión conosida como list comprehension. Por ah
 ## Size: 0.036339 (GB)
 ## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
 ## </code></pre>
-<div id="guardando-el-archivo-de-tryectoria" class="section level3">
-<h3><span class="header-section-number">1.3.1</span> Guardando el archivo de tryectoria</h3>
-<p>Como vimos en el jemplo de la tayectoria de la minimización, podemos usar la función <code>write_traj()</code>. Observa qué parámetros se requieren para guardar el nuevo archivo.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Podemos guardar el archivo para trabajar con él en un posterior análisis</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">name_file_full_traj <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_FULL_TRAJ.dcd&#39;</span></a>
-<a class="sourceLine" id="cb36-3" data-line-number="3">pyt.write_traj(filename <span class="op">=</span> name_file_full_traj, </a>
-<a class="sourceLine" id="cb36-4" data-line-number="4">               traj <span class="op">=</span> full_traj, overwrite <span class="op">=</span> <span class="va">True</span>)</a></code></pre></div>
-</div>
 <div id="superposición-de-las-estructuras" class="section level3">
-<h3><span class="header-section-number">1.3.2</span> Superposición de las estructuras</h3>
-<p>Bien, ahora podemos comenzar con el análisis de la trayectoria. Si bien, en general debemos enfocarnos en la fase de producción, para este ejemplo comenzaremos observando la evolución conformacional de la proteína a través de todas las fases de la trayectoria.<br />
-Primero vamos a superponer todas las conformaciones de la proteína. Para ello, el método superpose realiza moviemientos translacionales y rotacionales de forma iterativa minimizando el RMSD entre todas las confromaciones. Observa que el alineamiento lo realizaremos considerando los carbonos alfa únicamente de los residuos 4 a 17, es decir, hemos omitido los primeros y los últimos tres reiduos de la proteína. Si lo deseas puedes reducir o extender esta selección.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Superposición de los frames</span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">full_traj.superpose(mask <span class="op">=</span> <span class="st">&#39;:4-17@CA&#39;</span>, ref <span class="op">=</span> <span class="dv">0</span>) </a>
-<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="co"># Por default el primer frame es tomado como referencia</span></a></code></pre></div>
+<h3>Superposición de las estructuras</h3>
+<p>Primero vamos a superponer todas las conformaciones de la proteína. Para ello, el método superpose realiza moviemientos translacionales y rotacionales de forma iterativa minimizando el RMSD entre todas las confromaciones. Observa que el alineamiento lo realizaremos considerando los carbonos alfa únicamente de los residuos 4 a 17, es decir, hemos omitido los primeros y los últimos tres reiduos de la proteína. Si lo deseas puedes reducir o extender esta selección.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Superposición de los frames</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">full_traj.superpose(mask <span class="op">=</span> <span class="st">&#39;:4-17@CA&#39;</span>, ref <span class="op">=</span> <span class="dv">0</span>) </a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="co"># Por default el primer frame es tomado como referencia</span></a></code></pre></div>
 <pre><code>## pytraj.Trajectory, 5348 frames: 
 ## Size: 0.036339 (GB)
 ## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
 ## </code></pre>
 </div>
+<div id="guardando-el-archivo-de-tryectoria" class="section level3">
+<h3>Guardando el archivo de tryectoria</h3>
+<p>Como vimos en el ejemplo de la tayectoria de la minimización, podemos usar la función <code>write_traj()</code>. Observa qué parámetros se requieren para guardar el nuevo archivo.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Podemos guardar el archivo para trabajar con él en un posterior análisis</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">name_file_full_traj <span class="op">=</span> <span class="ss">F&#39;</span><span class="sc">{</span>dir_traj<span class="sc">}</span><span class="ss">/tc5b_PROT_FULL_TRAJ.dcd&#39;</span></a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">pyt.write_traj(filename <span class="op">=</span> name_file_full_traj, </a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">               traj <span class="op">=</span> full_traj, overwrite <span class="op">=</span> <span class="va">True</span>)</a></code></pre></div>
+</div>
 <div id="visualización-de-la-trayectoria" class="section level3">
-<h3><span class="header-section-number">1.3.3</span> Visualización de la trayectoria</h3>
-<p>Podemos usar nglview para visualizar la tryectoria con los frames superpuestos.</p>
+<h3>Visualización de la trayectoria</h3>
+<p>Podemos usar <em>nglview</em> para visualizar la tryectoria con los frames superpuestos.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb39-1" data-line-number="1">full_traj_sup_view <span class="op">=</span> nv.show_pytraj(full_traj)</a>
 <a class="sourceLine" id="cb39-2" data-line-number="2">full_traj_sup_view.add_representation(<span class="st">&quot;licorice&quot;</span>)</a>
 <a class="sourceLine" id="cb39-3" data-line-number="3">full_traj_sup_view</a></code></pre></div>
+<div class="container text-center">
+<script src="https://unpkg.com/ngl@0.10.4/dist/ngl.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+       var stage = new NGL.Stage( "viewport", {backgroundColor:'white'}  );
+       stage.loadFile("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.psf").then(function (o) {
+          NGL.autoLoad("https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/5-traj_analysis/tc5b_PROT_SA.dcd").then(function (frames) {
+            o.addTrajectory(frames, {
+              initialFrame: 0,
+              superpose: false
+            })
+            var sele = "not backbone or .CA or (PRO and .N)"
+            o.addRepresentation("licorice")
+            o.addRepresentation("cartoon", { color: "residueindex", aspectRatio: 4, scale: 0.5 })
+            var traj = o.trajList[0].trajectory;
+            var player = new NGL.TrajectoryPlayer( traj, { } );
+            traj.setPlayer( player );
+            traj.player.play();
+            stage.autoView();
+        })
+      })
+    });
+  </script>
+<div id="viewport" class="justify-content-center" style="height: 300px; width: 100%; position: relative;">
+
 </div>
 </div>
-</div>
-<div id="rmsd-y-rmsf" class="section level1">
-<h1><span class="header-section-number">2</span> RMSD y RMSF</h1>
-<div id="cálculo-del-rmsd" class="section level2">
-<h2><span class="header-section-number">2.1</span> Cálculo del RMSD</h2>
-<p>Ahora procederemos a calcular el rmsd de todos los frames de la trayectoria con respecto a una estructura de referencia.<br />
-Como primer ejemplo usaremos la estructura lineal usando el parámetro ref.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Cálculo del RMSD de la trayectoria total</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="co"># tomando como referencia la estructura inicial (lineal)</span></a>
-<a class="sourceLine" id="cb40-3" data-line-number="3">rmsd_full_REF_lineal <span class="op">=</span> pyt.rmsd(traj <span class="op">=</span> full_traj, </a>
-<a class="sourceLine" id="cb40-4" data-line-number="4">                                mask <span class="op">=</span> <span class="st">&#39;:4-17,@CA&#39;</span>, </a>
-<a class="sourceLine" id="cb40-5" data-line-number="5">                                ref <span class="op">=</span> init_struc)</a></code></pre></div>
-<div id="grafica-de-rmsd" class="section level3">
-<h3><span class="header-section-number">2.1.1</span> Grafica de RMSD</h3>
-<p>Para graficar el RMSD importamos las librerías matplotlib y seaborn y establecemos algunos parámetros por default para las gráficas.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Importamos las librerías y parámetros para generar las gráficas</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="im">from</span>  matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="im">import</span> seaborn <span class="im">as</span> sns</a>
-<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="im">import</span> pylab</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5">sns.<span class="bu">set</span>( context <span class="op">=</span> <span class="st">&#39;talk&#39;</span>, style <span class="op">=</span> <span class="st">&#39;ticks&#39;</span>, palette <span class="op">=</span> <span class="st">&quot;Spectral&quot;</span>)</a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">pylab.rcParams[<span class="st">&#39;figure.figsize&#39;</span>] <span class="op">=</span> (<span class="dv">15</span>, <span class="dv">5</span>)</a></code></pre></div>
-<p>Ahora generamos la gráfica de la trayectoria total:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Creamos la figura del RMSD de la trayectoria total</span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2">plt.scatter( x <span class="op">=</span> <span class="bu">range</span>(full_traj.n_frames), </a>
-<a class="sourceLine" id="cb42-3" data-line-number="3">             y <span class="op">=</span> rmsd_full_REF_lineal, s <span class="op">=</span> <span class="dv">20</span>, alpha <span class="op">=</span> <span class="fl">0.3</span> )</a>
-<a class="sourceLine" id="cb42-4" data-line-number="4">plt.title(<span class="st">&quot;RMSD trayectoria TOTAL. Ref = conformación lineal&quot;</span>)</a>
-<a class="sourceLine" id="cb42-5" data-line-number="5">plt.xlabel(<span class="st">&quot;# Frame&quot;</span>)</a>
-<a class="sourceLine" id="cb42-6" data-line-number="6">plt.show()</a></code></pre></div>
-<p><img src="analisis_traj_files/figure-html/unnamed-chunk-22-1.png" /><!-- --></p>
-<p>Como es de esperarse, conforme el tiempo de simulación avanza hay un aumento en el RMSD de cada frame con respecto a la conformación inicial.<br />
-Ahora bien, para un análisis más interesante usaremos como referencia la estructura por NMR de la proteína, con el objetivo de saber si, a lo largo de la simulación, las estructura de la proteína se aproxima a la estructura experimental.<br />
-Para ello cargamos la estructura NMR de la proteína.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Cargamos la estructura NMR</span></a>
-<a class="sourceLine" id="cb43-2" data-line-number="2">nmr_strc <span class="op">=</span> pyt.load(filename <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.pdb&#39;</span>,</a>
-<a class="sourceLine" id="cb43-3" data-line-number="3">                  top <span class="op">=</span> <span class="st">&#39;dm_sources_1L2Y/5-traj_analysis/1l2y_Hs.psf&#39;</span>)</a></code></pre></div>
-<p>Calculamos el RMSD de la trayectoria usando como referencia a nmr_strc. Seguido de ello, generamos la gráfica.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb44-1" data-line-number="1">rmsd_full_REF_nmr <span class="op">=</span> pyt.rmsd( traj <span class="op">=</span> full_traj, </a>
-<a class="sourceLine" id="cb44-2" data-line-number="2">                                mask <span class="op">=</span> <span class="st">&#39;:4-17,@CA&#39;</span>, </a>
-<a class="sourceLine" id="cb44-3" data-line-number="3">                                ref <span class="op">=</span> nmr_strc)</a></code></pre></div>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb45-1" data-line-number="1">plt.scatter( x <span class="op">=</span> <span class="bu">range</span>(full_traj.n_frames), y <span class="op">=</span> rmsd_full_REF_nmr, </a>
-<a class="sourceLine" id="cb45-2" data-line-number="2">             s <span class="op">=</span> <span class="dv">20</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, c<span class="op">=</span><span class="st">&#39;orange&#39;</span> )</a>
-<a class="sourceLine" id="cb45-3" data-line-number="3">plt.title(<span class="st">&quot;RMSD trayectoria TOTAL. Ref = conformación NMR 1l2y&quot;</span>)</a>
-<a class="sourceLine" id="cb45-4" data-line-number="4">plt.xlabel(<span class="st">&quot;# Frame&quot;</span>)</a>
-<a class="sourceLine" id="cb45-5" data-line-number="5">plt.show()</a></code></pre></div>
-<p><img src="analisis_traj_files/figure-html/unnamed-chunk-25-1.png" /><!-- --></p>
-<p>Como ves, al principio de la simulación la conformación inicial y la estructura por NMR son muy distintas (entre 6 a 8 A), sin embargo, a lo largo de la dinámica y sobre todo en la producción, la conformación de la porteína tiende a ser más parecida a la estructura NMR.</p>
-<p>Finalmente, visualicemos únicamente la fase de producción con ambas referencias:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
-<a class="sourceLine" id="cb46-2" data-line-number="2"><span class="co"># Creamos una tabla con pandas</span></a>
-<a class="sourceLine" id="cb46-3" data-line-number="3"><span class="co"># Dado que la producción corresponde a los últimos 5000 frames,</span></a>
-<a class="sourceLine" id="cb46-4" data-line-number="4"><span class="co"># usamos el slicing [-5000:] para extraer esos últimos 5000 datos</span></a>
-<a class="sourceLine" id="cb46-5" data-line-number="5">rmsd_prod <span class="op">=</span> pd.DataFrame({<span class="st">&quot;Ref_lineal&quot;</span>: rmsd_full_REF_lineal[<span class="op">-</span><span class="dv">5000</span>:], </a>
-<a class="sourceLine" id="cb46-6" data-line-number="6">                          <span class="st">&quot;Ref_NMR&quot;</span>: rmsd_full_REF_nmr[<span class="op">-</span><span class="dv">5000</span>:]})</a>
-<a class="sourceLine" id="cb46-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb46-8" data-line-number="8"><span class="co"># Sólo por variar, vamos a usar seaborn para generar el gráfico:</span></a>
-<a class="sourceLine" id="cb46-9" data-line-number="9">ax <span class="op">=</span> sns.lineplot(data <span class="op">=</span> rmsd_prod)</a>
-<a class="sourceLine" id="cb46-10" data-line-number="10">ax.set_title(<span class="st">&quot;RMSD producción&quot;)</span></a></code></pre></div>
-<p><img src="analisis_traj_files/figure-html/unnamed-chunk-26-1.png" /><!-- --></p>
-</div>
-</div>
-<div id="cálculo-del-rmsf" class="section level2">
-<h2><span class="header-section-number">2.2</span> Cálculo del RMSF</h2>
-<p>Vamos a finalizar este análisis evaluando el RMSF de la proteína a lo largo de la fase de producción. Para ello, primero vamos a superponer toda la trayectoria a un frame promedio.</p>
-<div id="obtención-del-frame-promedio-y-superposición-de-la-trayectoria" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Obtención del frame promedio y superposición de la trayectoria</h3>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co"># Obtenemos el frame promedio</span></a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">avg_prod_frame <span class="op">=</span> pyt.mean_structure(traj <span class="op">=</span> prod_traj)</a>
-<a class="sourceLine" id="cb47-3" data-line-number="3"><span class="co"># Y superponemos la trayectoria a dicho frame</span></a>
-<a class="sourceLine" id="cb47-4" data-line-number="4">prod_traj.superpose(ref <span class="op">=</span> avg_prod_frame, mask <span class="op">=</span> <span class="st">&#39;:3-18@CA&#39;</span>)</a></code></pre></div>
-<pre><code>## pytraj.Trajectory, 5000 frames: 
-## Size: 0.033975 (GB)
-## &lt;Topology: 304 atoms, 20 residues, 1 mols, non-PBC&gt;
-## </code></pre>
-<p>Ahora calculamos el RMSF de toda la producción:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb49-1" data-line-number="1">rmsf_prod_traj <span class="op">=</span> pyt.rmsf( prod_traj, mask <span class="op">=</span> <span class="st">&#39;@CA&#39;</span> )</a>
-<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="co"># Graficamos</span></a>
-<a class="sourceLine" id="cb49-3" data-line-number="3">plt.plot( rmsf_prod_traj.T[<span class="dv">1</span>], c <span class="op">=</span> <span class="st">&#39;red&#39;</span>)</a>
-<a class="sourceLine" id="cb49-4" data-line-number="4">plt.title(<span class="st">&quot;RMSF producción total&quot;</span>)</a>
-<a class="sourceLine" id="cb49-5" data-line-number="5">plt.xlabel(<span class="st">&quot;# Residuo&quot;</span>)</a>
-<a class="sourceLine" id="cb49-6" data-line-number="6">plt.show()</a></code></pre></div>
-<p><img src="analisis_traj_files/figure-html/unnamed-chunk-28-1.png" /><!-- --></p>
-<p>PAra terminar esta sección, un análisis interesante sería ver cómo el RMSF de la proteína va cambiando tomando ciertos intervalos de la producción.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co"># Ahora calculamos el RMSF a diferentes intervalos de la producción</span></a>
-<a class="sourceLine" id="cb50-2" data-line-number="2">num_interv <span class="op">=</span> <span class="dv">5</span></a>
-<a class="sourceLine" id="cb50-3" data-line-number="3">interv_size <span class="op">=</span> <span class="bu">int</span>(prod_traj.n_frames <span class="op">/</span> num_interv)</a>
-<a class="sourceLine" id="cb50-4" data-line-number="4">df_rmsf <span class="op">=</span> pd.DataFrame(</a>
-<a class="sourceLine" id="cb50-5" data-line-number="5">        {<span class="ss">F&#39;Interv. </span><span class="sc">{i}</span><span class="ss">&#39;</span>: pyt.rmsf( prod_traj[i<span class="op">*</span>interv_size : (i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>interv_size],</a>
-<a class="sourceLine" id="cb50-6" data-line-number="6">        mask <span class="op">=</span> <span class="st">&#39;@CA&#39;</span>).T[<span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_interv)} )</a></code></pre></div>
-<p>Graficamos usando <code>seaborn</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb51-1" data-line-number="1">sns.set_palette(<span class="st">&quot;husl&quot;</span>)</a>
-<a class="sourceLine" id="cb51-2" data-line-number="2">ax <span class="op">=</span> sns.lineplot(data <span class="op">=</span> df_rmsf, dashes <span class="op">=</span> <span class="va">False</span>)</a>
-<a class="sourceLine" id="cb51-3" data-line-number="3">ax.set_title(<span class="st">&quot;RMSF producción&quot;)</span></a></code></pre></div>
-<p><img src="analisis_traj_files/figure-html/unnamed-chunk-30-1.png" /><!-- --></p>
-<p>En general, podremos observar que hacia la última parte de la trayectoria, el backbone de la proteína tiende a ser más estable. Continuaremos con más análisis de la trayectoria en la siguiente sección.</p>
 </div>
 </div>
 </div>
