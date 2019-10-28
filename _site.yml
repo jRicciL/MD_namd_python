@@ -1,5 +1,6 @@
 name: "Curso_DM_namd"
 output_dir: "docs"
+title: "Curso de DM"
 
 header-includes:
 - \usepackage{fancyhdr}
@@ -26,6 +27,8 @@ navbar:
         href: analisis_traj.html
       - text: "RMSD y RMSF"
         href: rmsd_y_rmsf.html
+right:
+  - icon: fa-question fa-lg
 output:
   html_document:
     toc: false

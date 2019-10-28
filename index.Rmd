@@ -1,4 +1,5 @@
 ---
+name: "AguilaLab: Dinámica Molecular"
 output:
   html_document:
     toc: false
