@@ -493,11 +493,11 @@ A continuación mostramos el ejemplo de cómo se generaron estos archivos “red
 <a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co"># Equilibrado</span></a></code></pre></div>
 <pre><code>## Calentamiento: 96 frames</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb21-1" data-line-number="1">eq_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_eq, top <span class="op">=</span> top_prot_psf)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Equilibrado: </span><span class="sc">{</span>eq_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="bu">print</span>( <span class="ss">F&#39;Equilibrado: </span><span class="sc">{</span>eq_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co"># Producción</span></a></code></pre></div>
 <pre><code>## Equilibrado: 250 frames</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Producción</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">prod_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_prod, top <span class="op">=</span> top_prot_psf)</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="bu">print</span>(<span class="ss">F&#39;Producción: </span><span class="sc">{</span>prod_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb23-1" data-line-number="1">prod_traj <span class="op">=</span> pyt.load(filename <span class="op">=</span> f_prod, top <span class="op">=</span> top_prot_psf)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="bu">print</span>(<span class="ss">F&#39;Producción: </span><span class="sc">{</span>prod_traj<span class="sc">.</span>n_frames<span class="sc">}</span><span class="ss"> frames&#39;</span>)</a></code></pre></div>
 <pre><code>## Producción: 5000 frames</code></pre>
 <p>Además de cargar los archivos, hemos usado el atributo n_frames que nos dice cuántos frames posee cada tryectoria. En python es posible utilizar las funciones <code>type()</code> y <code>dir()</code> para conocer qué métodos y atributos posee un objeto según la clase a que pertenece.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="bu">print</span>(<span class="bu">type</span>( prod_traj ))</a></code></pre></div>
