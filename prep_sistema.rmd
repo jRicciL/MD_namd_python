@@ -6,6 +6,13 @@ customjs:
 
 # Preparación del sistema
 
+<div style="height: 400px; width: 100%; position: relative;" class='viewer_3Dmoljs justify-content-center border' data-href='https://raw.githubusercontent.com/jRicciL/MD_namd_python/master/dm_sources_1L2Y/1-topologia/tc5b.pdb' 
+data-backgroundcolor='0x303030' 
+data-style1='cartoon:color=spectrum' 
+data-surface1='opacity:.5;color:white'>
+</div> 
+
+
 Vamos a comenzar a preparar el sistema de la proteína **tc5b** partiendo del archivo `TC5b_input.pdb`, el cual puedes descargar desde el [repositorio de github](https://github.com/jRicciL/MD_namd_python/tree/master/dm_sources_1L2Y), en la carpeta `1-topologia`.  
 
 Como primer paso debemos generar un archivo de coordenadas (`.pdb`) y un archivo de topología (`.psf`) a partir del archivo `TC5b_input.pdb`. La idea es que los nuevos archivos sigan la nomenclatura y las especificaciones del campo de fuerza *CHARMM*, que usaremos para llevar a cabo la simulación. Para lograrlo usaremos el archivo [`gen_psf.tcl`](https://github.com/jRicciL/MD_namd_python/blob/master/dm_sources_1L2Y/1-topologia/gen_psf.tcl) que contiene la siguiente información para comenzar a construir el sistema.
