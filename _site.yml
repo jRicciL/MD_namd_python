@@ -8,6 +8,8 @@ header-includes:
 - \fancyhead[CO,CE]{This is fancy header}
 - \fancyfoot[CO,CE]{And this is a fancy footer}
 - \fancyfoot[LE,RO]{\thepage}
+plugins:
+ - jekyll-seo-tag
 navbar:
   title: "Curso de DM"
   left:
@@ -41,4 +43,3 @@ output:
     number_sections: false
     include:
       after_body: footer.html
-  
